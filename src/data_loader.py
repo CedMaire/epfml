@@ -3,7 +3,7 @@ import numpy as np
 '''
 Culumn 0 (Id): unique id (int) of the sample
     NOT A FEATURE
-Column 1 (Prediction): unique values ['b', 's'] -> converted to [0, 1] respectively
+Column 1 (Prediction): unique values ["b", "s"] -> converted to [0, 1] respectively
     converters={1: lambda x: 0 if chr(ord(x)) == "b" else 1}
     NOT A FEATURE
 ------------------------------------------------------------------------------------------------------------------
@@ -67,73 +67,24 @@ Column 30 (PRI_jet_subleading_phi): azimuth angle (float) of subleading jet
 Column 31 (PRI_jet_all_pt): scalar sum (float) of the transverse momentum of all the jets of the events
 '''
 
-DATA_PATH_SAMPLE_SUBMISSION = "data/sample-submission.csv"
-DATA_PATH_TEST = "data/test.csv"
-DATA_PATH_TRAIN = "data/train.csv"
+DATA_PATH_SAMPLE_SUBMISSION = "../data/sample-submission.csv"
+DATA_PATH_TEST = "../data/test.csv"
+DATA_PATH_TRAIN = "../data/train.csv"
 
+# Function greatly inspired from the given file "proj1_helpers.py".
+def load_data(data_path, sub_sample=False):
+    y = np.genfromtxt(data_path, delimiter=",", skip_header=1, dtype=str, usecols=1)
+    x = np.genfromtxt(data_path, delimiter=",", skip_header=1)
 
-def standardize(data):
-    return (data - np.mean(data)) / np.std(data)
+    ids = x[:, 0].astype(np.int)
+    input_data = x[:, 2:]
 
+    yb = np.ones(len(y))
+    yb[np.where(y == "b")] = -1
 
-def load_data(clean=False):
-    y = np.genfromtxt(DATA_PATH_TRAIN, delimiter=",",
-                      skip_header=1, usecols=(1),
-                      converters={1: lambda x: 0 if chr(ord(x)) == "b" else 1})
-    data = np.genfromtxt(DATA_PATH_TRAIN, delimiter=",",
-                         skip_header=1, usecols=range(2, 32))
+    if sub_sample:
+        yb = yb[::50]
+        input_data = input_data[::50]
+        ids = ids[::50]
 
-    if clean:
-        pass  # TODO: clean?
-
-    d_vars = np.zeros(len(data[0]), dtype=object)
-    for i in range(len(data[0])):
-        # TODO: standardize
-        # d_vars[i] = standardize(data[:, i])
-        d_vars[i] = data[:, i]
-
-    # tx = np.c_[np.ones(len(y)), d_vars]
-    # tx = np.zeros(len(data), dtype=object)
-    # for i in range(len(data)):
-    #     tx[i] = d_vars[i, :]
-
-    print(y)
-    print("#######################################")
-    print(data)
-    print("#######################################")
-    print(d_vars)
-    # print("#######################################")
-    # print(tx)
-
-    # return y, tx
-    return y, d_vars
-
-
-'''
-def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
-    """
-    Generate a minibatch iterator for a dataset.
-    Takes as input two iterables (here the output desired values 'y' and the input data 'tx')
-    Outputs an iterator which gives mini-batches of `batch_size` matching elements from `y` and `tx`.
-    Data can be randomly shuffled to avoid ordering in the original data messing with the randomness of the
-    minibatches.
-    Example of use :
-    for minibatch_y, minibatch_tx in batch_iter(y, tx, 32):
-        <DO-SOMETHING>
-    """
-    data_size = len(y)
-
-    if shuffle:
-        shuffle_indices = np.random.permutation(np.arange(data_size))
-        shuffled_y = y[shuffle_indices]
-        shuffled_tx = tx[shuffle_indices]
-    else:
-        shuffled_y = y
-        shuffled_tx = tx
-    for batch_num in range(num_batches):
-        start_index = batch_num * batch_size
-        end_index = min((batch_num + 1) * batch_size, data_size)
-        if start_index != end_index:
-            yield shuffled_y[start_index:end_index], shuffled_tx[start_index:end_index]
-
-'''
+    return yb, input_data, ids
