@@ -5,3 +5,8 @@ def standardize(x):
     normed = centered / np.std(centered, axis=0)
 
     return normed
+
+def build_model_data(y, x):
+    x = standardize(x)
+
+    return y, np.c_[np.ones(len(y)), x]
