@@ -7,6 +7,9 @@ if __name__ == "__main__":
     print(y, len(y))
     print(tx, len(tx))
     print(ids, len(ids))
-
+    print("--------------------------------------------------")
     print(np.mean(tx, axis=0))
     print(np.std(tx, axis=0))
+    print("--------------------------------------------------")
+    print(y.shape)
+    print(tx.shape)
