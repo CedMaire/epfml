@@ -1,9 +1,9 @@
+import datetime
+import numpy as np
 from ipywidgets import IntSlider, interact
 from plots import gradient_descent_visualization
 from cost_computer import calculate_mse, compute_loss
 from data_processor import batch_iter
-import datetime
-import numpy as np
 
 def compute_gradient(y, tx, w):
     err = y - tx.dot(w)
@@ -51,7 +51,7 @@ def stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gamma):
 
 def test_GD(y, tx):
     # Define the parameters of the algorithm.
-    max_iters = 10000
+    max_iters = 100
     gamma = 0.163
 
     # Initialization
@@ -76,7 +76,6 @@ def test_GD(y, tx):
 
 def test_SGD(y, tx):
     # Define the parameters of the algorithm.
-#    max_iters = 10000
     max_iters = 100
     gamma = 0.007
     batch_size = 1

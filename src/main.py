@@ -1,11 +1,11 @@
 import numpy as np
-import data_loader
 import gradient_descent
+from data_loader import load_data, DATA_PATH_TEST, DATA_PATH_TRAIN, DATA_PATH_SAMPLE_SUBMISSION
 
 if __name__ == "__main__":
-    y, tx, ids = data_loader.load_data(data_loader.DATA_PATH_TRAIN)
+    y, tx, ids = load_data(DATA_PATH_TRAIN)
 
-    gradient_descent.test_SGD(y, tx)
+    gradient_descent.test_GD(y, tx)
 
 #    print(y, len(y))
 #    print(tx, len(tx))

@@ -1,5 +1,5 @@
+from data_processor import build_model_data
 import numpy as np
-import data_processor
 
 '''
 Culumn 0 (Id): unique id (int) of the sample
@@ -88,5 +88,5 @@ def load_data(data_path, sub_sample=False):
         input_data = input_data[::50]
         ids = ids[::50]
 
-    y, tx = data_processor.build_model_data(yb, input_data)
+    y, tx = build_model_data(yb, input_data)
     return y, tx, ids
