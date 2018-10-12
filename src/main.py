@@ -1,8 +1,12 @@
+import numpy as np
 import data_loader
 
 if __name__ == "__main__":
-    yb, input_data, ids = data_loader.load_data(data_loader.DATA_PATH_TRAIN)
+    y, tx, ids = data_loader.load_data(data_loader.DATA_PATH_TRAIN)
 
-    print(yb, len(yb))
-    print(input_data, len(input_data))
+    print(y, len(y))
+    print(tx, len(tx))
     print(ids, len(ids))
+
+    print(np.mean(tx, axis=0))
+    print(np.std(tx, axis=0))

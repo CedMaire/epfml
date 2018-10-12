@@ -1,4 +1,5 @@
 import numpy as np
+import data_processor
 
 '''
 Culumn 0 (Id): unique id (int) of the sample
@@ -87,4 +88,4 @@ def load_data(data_path, sub_sample=False):
         input_data = input_data[::50]
         ids = ids[::50]
 
-    return yb, input_data, ids
+    return yb, data_processor.standardize(input_data), ids
