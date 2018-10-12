@@ -1,6 +1,7 @@
 from ipywidgets import IntSlider, interact
 from plots import gradient_descent_visualization
-from cost_computer import calculate_mse
+from cost_computer import calculate_mse, compute_loss
+from data_processor import batch_iter
 import datetime
 import numpy as np
 
@@ -29,6 +30,25 @@ def gradient_descent(y, tx, initial_w, max_iters, gamma):
 
     return ws, losses
 
+def stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gamma):
+    ws = [initial_w]
+    losses = []
+
+    w = initial_w
+    for n_iter in range(max_iters):
+        for y_batch, tx_batch in batch_iter(y, tx, batch_size=batch_size, num_batches=1):
+            grad, _ = compute_gradient(y_batch, tx_batch, w)
+            w = w - gamma * grad
+            loss = compute_loss(y, tx, w)
+
+            ws.append(w)
+            losses.append(loss)
+
+        print("Stochastic Gradient Descent({bi}/{ti}): loss={l}".format(bi=n_iter, ti=max_iters - 1, l=loss))
+        print("w", w)
+
+    return ws, losses
+
 def test_GD(y, tx):
     # Define the parameters of the algorithm.
     max_iters = 10000
@@ -37,7 +57,7 @@ def test_GD(y, tx):
     # Initialization
     w_initial = np.array(np.zeros(len(tx[0])))
 
-    # Start gradient descent.
+    # Start gradient descent
     start_time = datetime.datetime.now()
     gradient_losses, gradient_ws = gradient_descent(y, tx, w_initial, max_iters, gamma)
     end_time = datetime.datetime.now()
@@ -46,13 +66,40 @@ def test_GD(y, tx):
     exection_time = (end_time - start_time).total_seconds()
     print("Gradient Descent: execution time={t:.3f} seconds".format(t=exection_time))
 
-    # Interact
-    def plot_figure(n_iter):
-        fig = gradient_descent_visualization(
-            gradient_losses, gradient_ws, grid_losses, grid_w0, grid_w1, mean_x, std_x, height, weight, n_iter)
-        fig.set_size_inches(10.0, 6.0)
+#    # Interact
+#    def plot_figure(n_iter):
+#        fig = gradient_descent_visualization(
+#            gradient_losses, gradient_ws, grid_losses, grid_w0, grid_w1, mean_x, std_x, height, weight, n_iter)
+#        fig.set_size_inches(10.0, 6.0)
+#
+#    interact(plot_figure, n_iter=IntSlider(min=1, max=len(gradient_ws)))
 
-    interact(plot_figure, n_iter=IntSlider(min=1, max=len(gradient_ws)))
+def test_SGD(y, tx):
+    # Define the parameters of the algorithm.
+#    max_iters = 10000
+    max_iters = 100
+    gamma = 0.007
+    batch_size = 1
+
+    # Initialization
+    w_initial = np.array(np.zeros(len(tx[0])))
+
+    # Start SGD
+    start_time = datetime.datetime.now()
+    sgd_losses, sgd_ws = stochastic_gradient_descent(y, tx, w_initial, batch_size, max_iters, gamma)
+    end_time = datetime.datetime.now()
+
+    # Print result
+    exection_time = (end_time - start_time).total_seconds()
+    print("Stochastic Gradient Descent: execution time={t:.3f} seconds".format(t=exection_time))
+
+#    # Interact
+#    def plot_figure(n_iter):
+#        fig = gradient_descent_visualization(
+#            sgd_losses, sgd_ws, grid_losses, grid_w0, grid_w1, mean_x, std_x, height, weight, n_iter)
+#        fig.set_size_inches(10.0, 6.0)
+#
+#    interact(plot_figure, n_iter=IntSlider(min=1, max=len(sgd_ws)))
 
 '''
 Gradient Descent(9999/9999): loss=0.3400115969466962
