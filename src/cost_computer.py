@@ -7,9 +7,9 @@ def calculate_mae(e):
     return np.mean(np.abs(e))
 
 def compute_loss(y, tx, w, mse=True):
-    diff = y - tx.dot(w)
+    err = y - tx.dot(w)
 
     if mse:
-        return calculate_mse(diff)
+        return calculate_mse(err)
     else:
-        return calculate_mae(diff)
+        return calculate_mae(err)
