@@ -5,6 +5,16 @@ from data_loader import load_data, DATA_PATH_TEST, DATA_PATH_TRAIN, DATA_PATH_SA
 if __name__ == "__main__":
     y, tx, ids = load_data(DATA_PATH_TRAIN)
 
+#    print("IDs")
+#    print(ids)
+#    print("--------------------------------------------------")
+#    print("y")
+#    print(y)
+#    print("--------------------------------------------------")
+#    print("TX")
+#    print(tx)
+#    print(tx.shape)
+
     gradient_descent.test_GD(y, tx)
 
 #    print(y, len(y))
