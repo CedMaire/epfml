@@ -1,3 +1,4 @@
+from data_processor import build_model_data
 import numpy as np
 
 '''
@@ -87,4 +88,5 @@ def load_data(data_path, sub_sample=False):
         input_data = input_data[::50]
         ids = ids[::50]
 
-    return yb, input_data, ids
+    y, tx = build_model_data(yb, input_data)
+    return y, tx, ids
