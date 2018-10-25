@@ -1,5 +1,6 @@
 import numpy as np
 import gradient_descent
+import logistic_regression
 from data_loader import load_data, DATA_PATH_TEST, DATA_PATH_TRAIN, DATA_PATH_SAMPLE_SUBMISSION
 import data_loader
 from implementations import *
@@ -7,6 +8,14 @@ from implementations import *
 if __name__ == "__main__":
     y, tx, ids = load_data(DATA_PATH_TRAIN)
 
+    """
+    # benjamin
+#    logistic_regression.logistic_regression_gradient_descent(y, tx, 0.0000001, 1000)
+    logistic_regression.regularized_logistic_regression_gradient_descent(y, tx, 0.0000001, 1000,0.01)
+#    gradient_descent.test_GD(y, tx)
+#    gradient_descent.test_SGD(y, tx)
+    """
+    # Ced
     """
     y_tx = np.c_[y, tx]
     y_tx_one = y_tx[y_tx[:, 0] == 1, :]
