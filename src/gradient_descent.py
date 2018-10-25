@@ -59,7 +59,7 @@ def test_GD(y, tx):
 
     # Start gradient descent
     start_time = datetime.datetime.now()
-    gradient_losses, gradient_ws = gradient_descent(y, tx, w_initial, max_iters, gamma)
+    gradient_ws, gradient_losses = gradient_descent(y, tx, w_initial, max_iters, gamma)
     end_time = datetime.datetime.now()
 
     # Print result
@@ -74,6 +74,8 @@ def test_GD(y, tx):
 #
 #    interact(plot_figure, n_iter=IntSlider(min=1, max=len(gradient_ws)))
 
+    return gradient_ws[len(gradient_ws) - 1]
+
 def test_SGD(y, tx):
     # Define the parameters of the algorithm.
     max_iters = 100
@@ -85,7 +87,7 @@ def test_SGD(y, tx):
 
     # Start SGD
     start_time = datetime.datetime.now()
-    sgd_losses, sgd_ws = stochastic_gradient_descent(y, tx, w_initial, batch_size, max_iters, gamma)
+    sgd_ws, sgd_losses = stochastic_gradient_descent(y, tx, w_initial, batch_size, max_iters, gamma)
     end_time = datetime.datetime.now()
 
     # Print result
