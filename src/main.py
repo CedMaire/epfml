@@ -1,11 +1,14 @@
 import numpy as np
 import gradient_descent
 from data_loader import load_data, DATA_PATH_TEST, DATA_PATH_TRAIN, DATA_PATH_SAMPLE_SUBMISSION
+import data_loader
+from implementations import *
 
 if __name__ == "__main__":
     y, tx, ids = load_data(DATA_PATH_TRAIN)
-    y_tx = np.c_[y, tx]
 
+    """
+    y_tx = np.c_[y, tx]
     y_tx_one = y_tx[y_tx[:, 0] == 1, :]
     y_tx_minusone = y_tx[y_tx[:, 0] == -1, :]
 
@@ -56,3 +59,14 @@ if __name__ == "__main__":
 #    print("--------------------------------------------------")
 #    print(y.shape)
 #    print(tx.shape)
+
+    # Antonio
+    print(yb, len(yb))
+    print(input_data, len(input_data))
+    print(ids, len(ids))
+    
+    w, loss = least_squares(yb, input_data)
+    print(w, loss)
+    w, loss = ridge_regression(yb, input_data, 0.037)
+    print(w, loss)
+    """
