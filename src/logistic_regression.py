@@ -12,7 +12,7 @@ def calculate_gradient(y, tx, w):
     sigma = sigmoid(tx.dot(w))
     z = sigma - y
     grad = tx.T.dot(z)
-    return grad
+    return grad / len(sigma)
 
 def logistic_regression_gradient_descent(y, tx, gamma, max_iter):
     # init parameters
@@ -29,8 +29,7 @@ def logistic_regression_gradient_descent(y, tx, gamma, max_iter):
         losses.append(loss)
         ws.append(w)
         if(iter%100 == 0):
-            pass
-#            print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
+            print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
     return ws[len(ws) - 1].T[0], losses[len(losses) - 1][0][0]
             
 def regularized_logistic_regression(y, tx, w, lambd):
