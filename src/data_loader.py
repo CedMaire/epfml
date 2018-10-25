@@ -69,6 +69,7 @@ Column 31 (PRI_jet_all_pt): scalar sum (float) of the transverse momentum of all
 '''
 
 DATA_PATH_SAMPLE_SUBMISSION = "../data/sample-submission.csv"
+DATA_PATH_SAMPLE_SUBMISSION_TEST = "../data/sample-submission-test.csv"
 DATA_PATH_TEST = "../data/test.csv"
 DATA_PATH_TRAIN = "../data/train.csv"
 
@@ -81,7 +82,8 @@ def load_data(data_path, sub_sample=False):
     input_data = x[:, 2:]
 
     yb = np.ones(len(y))
-    yb[np.where(y == "b")] = 0
+    yb[np.where(y == "b")] = -1
+#    yb[np.where(y == "b")] = 0
 
     if sub_sample:
         yb = yb[::50]

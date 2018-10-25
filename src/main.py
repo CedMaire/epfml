@@ -1,22 +1,15 @@
 import numpy as np
 import gradient_descent
-import logistic_regression
-from data_loader import load_data, DATA_PATH_TEST, DATA_PATH_TRAIN, DATA_PATH_SAMPLE_SUBMISSION
-import data_loader
+from logistic_regression import *
+from data_loader import load_data, DATA_PATH_TEST, DATA_PATH_TRAIN, DATA_PATH_SAMPLE_SUBMISSION_TEST
 from implementations import *
+from label_predictor import predict_labels
+from csv_creator import create_csv
 
 if __name__ == "__main__":
-    y, tx, ids = load_data(DATA_PATH_TRAIN)
+    y_train, tx_train, ids_train = load_data(DATA_PATH_TRAIN)
 
-    """
-    # benjamin
-#    logistic_regression.logistic_regression_gradient_descent(y, tx, 0.0000001, 1000)
-    logistic_regression.regularized_logistic_regression_gradient_descent(y, tx, 0.0000001, 1000,0.01)
-#    gradient_descent.test_GD(y, tx)
-#    gradient_descent.test_SGD(y, tx)
-    """
-    # Ced
-    """
+
     y_tx = np.c_[y, tx]
     y_tx_one = y_tx[y_tx[:, 0] == 1, :]
     y_tx_minusone = y_tx[y_tx[:, 0] == -1, :]
@@ -45,37 +38,30 @@ if __name__ == "__main__":
     std_zip = list(zip(y_tx_one_std, y_tx_minusone_std))
     print(std_zip)
 
-#    print("IDs")
-#    print(ids)
-#    print("--------------------------------------------------")
-#    print("y")
-#    print(y)
-#    print("--------------------------------------------------")
-#    print("TX")
-#    print(tx)
-#    print(tx.shape)
-
     print("-------------------------------GRADIENT")
     w = gradient_descent.test_GD(y, tx)
     print(w)
 
-#    print(y, len(y))
-#    print(tx, len(tx))
-#    print(ids, len(ids))
-#    print("--------------------------------------------------")
-#    print(np.mean(tx, axis=0))
-#    print(np.std(tx, axis=0))
-#    print("--------------------------------------------------")
-#    print(y.shape)
-#    print(tx.shape)
+"""SUBMISSION
+    print("Train")
+    y_train, tx_train, ids_train = load_data(DATA_PATH_TRAIN)
+#    w, loss = gradient_descent.test_GD(y_train, tx_train)
+#    w, loss = gradient_descent.test_SGD(y_train, tx_train)
+#    w, loss = least_squares(y_train, tx_train)
+    w, loss = ridge_regression(y_train, tx_train, 0.037)
+#    w, loss = logistic_regression_gradient_descent(y_train, tx_train, 0.0000001, 1000)
+#    w, loss = regularized_logistic_regression_gradient_descent(y_train, tx_train, 0.0000001, 1000, 0.01)
 
-    # Antonio
-    print(yb, len(yb))
-    print(input_data, len(input_data))
-    print(ids, len(ids))
-    
-    w, loss = least_squares(yb, input_data)
-    print(w, loss)
-    w, loss = ridge_regression(yb, input_data, 0.037)
-    print(w, loss)
-    """
+    print(loss)
+    print(w)
+
+    print("Test")
+    _, tx_test, ids_test = load_data(DATA_PATH_TEST)
+    y_pred = predict_labels(w, tx_test)
+
+    create_csv(ids_test, y_pred, DATA_PATH_SAMPLE_SUBMISSION_TEST)
+
+#    print("Print")
+#    for i in range(1000):
+#        print(y_pred[i])
+"""

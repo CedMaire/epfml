@@ -6,7 +6,7 @@ def sigmoid(t):
 
 def calculate_loss(y, tx, w):
     sigma = sigmoid(tx.dot(w))
-    return -(y.T.dot(np.log(sigma)) + (1 - y).T.dot(np.log(1 - sigma)))
+    return -(y.T.dot(np.log(sigma)) + (1 - y).T.dot(np.log(1 - sigma))) / len(sigma)
 
 def calculate_gradient(y, tx, w):
     sigma = sigmoid(tx.dot(w))
@@ -29,7 +29,9 @@ def logistic_regression_gradient_descent(y, tx, gamma, max_iter):
         losses.append(loss)
         ws.append(w)
         if(iter%100 == 0):
-            print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
+            pass
+#            print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
+    return ws[len(ws) - 1].T[0], losses[len(losses) - 1][0][0]
             
 def regularized_logistic_regression(y, tx, w, lambd):
     num_samples = y.shape[0]
@@ -46,9 +48,11 @@ def regularized_logistic_regression_gradient_descent(y, tx, gamma, max_iter, lam
     y = np.array([y])
     y = y.T
     for iter in range(max_iter):
-        grad, loss = regularized_logistic_regression(y, tx, w, lambd)
+        loss, grad = regularized_logistic_regression(y, tx, w, lambd)
         w = w - gamma * grad
         losses.append(loss)
         ws.append(w)
         if(iter%100 == 0):
-            print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
+            pass
+#            print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
+    return ws[len(ws) - 1].T[0], losses[len(losses) - 1][0][0]

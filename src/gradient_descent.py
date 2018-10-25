@@ -25,8 +25,8 @@ def gradient_descent(y, tx, initial_w, max_iters, gamma):
         ws.append(w)
         losses.append(loss)
 
-        print("Gradient Descent({bi}/{ti}): loss={l}".format(bi=n_iter, ti=max_iters - 1, l=loss))
-        print("w", w)
+#        print("Gradient Descent({bi}/{ti}): loss={l}".format(bi=n_iter, ti=max_iters - 1, l=loss))
+#        print("w", w)
 
     return ws, losses
 
@@ -44,8 +44,8 @@ def stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gamma):
             ws.append(w)
             losses.append(loss)
 
-        print("Stochastic Gradient Descent({bi}/{ti}): loss={l}".format(bi=n_iter, ti=max_iters - 1, l=loss))
-        print("w", w)
+#        print("Stochastic Gradient Descent({bi}/{ti}): loss={l}".format(bi=n_iter, ti=max_iters - 1, l=loss))
+#        print("w", w)
 
     return ws, losses
 
@@ -64,7 +64,7 @@ def test_GD(y, tx):
 
     # Print result
     exection_time = (end_time - start_time).total_seconds()
-    print("Gradient Descent: execution time={t:.3f} seconds".format(t=exection_time))
+#    print("Gradient Descent: execution time={t:.3f} seconds".format(t=exection_time))
 
 #    # Interact
 #    def plot_figure(n_iter):
@@ -74,7 +74,7 @@ def test_GD(y, tx):
 #
 #    interact(plot_figure, n_iter=IntSlider(min=1, max=len(gradient_ws)))
 
-    return gradient_ws[len(gradient_ws) - 1]
+    return gradient_ws[len(gradient_ws) - 1], gradient_losses[len(gradient_losses) - 1]
 
 def test_SGD(y, tx):
     # Define the parameters of the algorithm.
@@ -92,7 +92,7 @@ def test_SGD(y, tx):
 
     # Print result
     exection_time = (end_time - start_time).total_seconds()
-    print("Stochastic Gradient Descent: execution time={t:.3f} seconds".format(t=exection_time))
+#    print("Stochastic Gradient Descent: execution time={t:.3f} seconds".format(t=exection_time))
 
 #    # Interact
 #    def plot_figure(n_iter):
@@ -101,6 +101,8 @@ def test_SGD(y, tx):
 #        fig.set_size_inches(10.0, 6.0)
 #
 #    interact(plot_figure, n_iter=IntSlider(min=1, max=len(sgd_ws)))
+
+    return sgd_ws[len(sgd_ws) - 1], sgd_losses[len(sgd_losses) - 1]
 
 '''
 gamma = 0.163

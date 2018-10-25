@@ -22,7 +22,7 @@ def standardize(x):
     return normed
 
 def build_model_data(y, x):
-    x = remove_undefined_columns(x)
+#    x = remove_undefined_columns(x)
     x = standardize(x)
 
     return y, np.c_[np.ones(len(y)), x]
