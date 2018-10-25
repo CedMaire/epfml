@@ -9,15 +9,17 @@ from csv_creator import create_csv
 if __name__ == "__main__":
     """
     y_train, tx_train, ids_train = load_data(DATA_PATH_TRAIN)
+    tx_train = np.c_[y_train, tx_train]
+#    tx_train = np.delete(tx_train, [4, 6, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], axis=1)
 
     corrcoefs = []
     for i, col_i in enumerate(tx_train.T):
         for j, col_j in enumerate(tx_train.T):
-            if i < j:
+            if i < j and i != 1 and j != 1:
                 corrcoefs.append((i, j, np.corrcoef(col_i, col_j)[0][1]))
 
-    for triple in corrcoefs:
-        print(triple)
+    corrcoefs = list(map(lambda triple: triple[1], filter(lambda triple: triple[0] == 0 and abs(triple[2]) < 0.16, corrcoefs)))
+    print(corrcoefs)
     """
 
     """
@@ -64,23 +66,31 @@ if __name__ == "__main__":
 
     print("Train")
     y_train, tx_train, ids_train = load_data(DATA_PATH_TRAIN)
-#    tx_train = np.delete(tx_train, [10 + 1, 11 + 1, 13 + 1, 14 + 1, 16 + 1], axis=1)
+    tx_train = np.c_[y_train, tx_train]
+    tx_train = np.delete(tx_train, [0, 4, 6, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], axis=1)
 
 #    w, loss = gradient_descent.test_GD(y_train, tx_train)
 #    w, loss = gradient_descent.test_SGD(y_train, tx_train)
 #    w, loss = least_squares(y_train, tx_train)
 #    w, loss = ridge_regression(y_train, tx_train, 0.037)
-    w, loss = logistic_regression_gradient_descent(y_train, tx_train, 0.9999, 2000)
+    w, loss = logistic_regression_gradient_descent(y_train, tx_train, 0.9999, 1000)
 #    w, loss = regularized_logistic_regression_gradient_descent(y_train, tx_train, 0.0000001, 1000, 0.01)
 
     print(loss)
     print(w)
 
     print("Test")
-    _, tx_test, ids_test = load_data(DATA_PATH_TEST)
-#    tx_test = np.delete(tx_test, [10 + 1, 11 + 1, 13 + 1, 14 + 1, 16 + 1], axis=1)
+    y_test, tx_test, ids_test = load_data(DATA_PATH_TEST)
+    tx_test = np.c_[y_test, tx_test]
+    tx_test = np.delete(tx_test, [0, 4, 6, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], axis=1)
 
     y_pred = predict_labels(w, tx_test)
+
+    y_len = len(y_pred)
+    y_pos = len(y_pred[y_pred == 1])
+    y_neg = len(y_pred[y_pred == -1])
+    print(" 1 ->", y_pos / y_len)
+    print("-1 ->", y_neg / y_len)
 
     create_csv(ids_test, y_pred, DATA_PATH_SAMPLE_SUBMISSION_TEST)
 
