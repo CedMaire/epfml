@@ -5,6 +5,7 @@ from data_loader import load_data, DATA_PATH_TEST, DATA_PATH_TRAIN, DATA_PATH_SA
 from implementations import *
 from label_predictor import predict_labels
 from csv_creator import create_csv
+from cross_validation import *
 from plots import print_stats, plot_label_feature_corrcoefs
 
 if __name__ == "__main__":
@@ -66,22 +67,23 @@ if __name__ == "__main__":
     y_train, tx_train, ids_train = load_data(DATA_PATH_TRAIN)
 #    tx_train = np.c_[y_train, tx_train]
     tx_train = np.delete(tx_train, [5, 12, 15, 18, 19, 20, 21, 23, 25, 27, 28, 29, 30], axis=1)
-
+    tx_train = build_poly(tx_train, 3)
 #    w, loss = gradient_descent.test_GD(y_train, tx_train)
 #    w, loss = gradient_descent.test_SGD(y_train, tx_train)
 #    w, loss = least_squares(y_train, tx_train)
 #    w, loss = ridge_regression(y_train, tx_train, 0.037)
-    w, loss = logistic_regression_gradient_descent(y_train, tx_train, 0.9999, 3000)
-#    w, loss = regularized_logistic_regression_gradient_descent(y_train, tx_train, 0.0000001, 1000, 0.01)
+#    w, loss = logistic_regression_gradient_descent(y_train, tx_train, 0.9999, 3000)
 
-    print(loss)
+    w, loss_train = logistic_regression.regularized_logistic_regression_gradient_descent(y_train, tx_train, 0.1, 1000,0.3)
+    
+    print(loss_train)
     print(w)
 
     print("Test")
     y_test, tx_test, ids_test = load_data(DATA_PATH_TEST)
 #    tx_test = np.c_[y_test, tx_test]
     tx_test = np.delete(tx_test, [5, 12, 15, 18, 19, 20, 21, 23, 25, 27, 28, 29, 30], axis=1)
-
+    tx_test = build_poly(tx_test, 3)
     y_pred = predict_labels(w, tx_test)
     print_stats(y_pred)
 
