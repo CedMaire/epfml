@@ -62,17 +62,16 @@ if __name__ == "__main__":
         print(idx, pair)
     """
 
-    """
     print("Train")
     y_train, tx_train, ids_train = load_data(DATA_PATH_TRAIN)
 #    tx_train = np.c_[y_train, tx_train]
-#    tx_train = np.delete(tx_train, [0, 4, 6, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], axis=1)
+    tx_train = np.delete(tx_train, [5, 12, 15, 18, 19, 20, 21, 23, 25, 27, 28, 29, 30], axis=1)
 
 #    w, loss = gradient_descent.test_GD(y_train, tx_train)
 #    w, loss = gradient_descent.test_SGD(y_train, tx_train)
 #    w, loss = least_squares(y_train, tx_train)
 #    w, loss = ridge_regression(y_train, tx_train, 0.037)
-    w, loss = logistic_regression_gradient_descent(y_train, tx_train, 0.9999, 1000)
+    w, loss = logistic_regression_gradient_descent(y_train, tx_train, 0.9999, 3000)
 #    w, loss = regularized_logistic_regression_gradient_descent(y_train, tx_train, 0.0000001, 1000, 0.01)
 
     print(loss)
@@ -81,10 +80,9 @@ if __name__ == "__main__":
     print("Test")
     y_test, tx_test, ids_test = load_data(DATA_PATH_TEST)
 #    tx_test = np.c_[y_test, tx_test]
-#    tx_test = np.delete(tx_test, [0, 4, 6, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], axis=1)
+    tx_test = np.delete(tx_test, [5, 12, 15, 18, 19, 20, 21, 23, 25, 27, 28, 29, 30], axis=1)
 
     y_pred = predict_labels(w, tx_test)
     print_stats(y_pred)
 
     create_csv(ids_test, y_pred, DATA_PATH_SAMPLE_SUBMISSION_TEST)
-    """

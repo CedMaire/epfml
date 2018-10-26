@@ -16,7 +16,7 @@ from label_predictor import predict_labels
 
 y, tx, ids_train = load_data(DATA_PATH_TRAIN)
 
-"""
+
 # In[3]:
 
 
@@ -54,7 +54,7 @@ def cross_validation(y, x, k_indices, k):
     return loss_train, loss_test,w
 
 
-# In[27]:
+# In[44]:
 
 
 def cross_validation_demo():
@@ -68,12 +68,12 @@ def cross_validation_demo():
     # cross validation
     loss_tr_tmp = []
     loss_te_tmp = []
+    tx_train = np.delete(tx, [5, 12, 15, 18, 19, 20, 21, 23, 25, 27, 28, 29, 30], axis=1)
     for k in range(k_fold):
-        loss_tr, loss_te,_ = cross_validation(y, tx, k_indices, k)
+        loss_tr, loss_te,_ = cross_validation(y, tx_train, k_indices, k)
         loss_tr_tmp.append(loss_tr)
         loss_te_tmp.append(loss_te)
         print("the loss of the training set is: ", np.mean(loss_tr_tmp))
         print("the loss of the test set is: ", np.mean(loss_te_tmp))
 
 cross_validation_demo()
-"""
