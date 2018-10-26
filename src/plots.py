@@ -5,6 +5,27 @@ import numpy as np
 from grid_search import get_best_parameters
 
 
+def print_stats(y_pred):
+    y_len = len(y_pred)
+    print(" 1 ->", len(y_pred[y_pred == 1]) / y_len)
+    print("-1 ->", len(y_pred[y_pred == -1]) / y_len)
+
+def plot_label_feature_corrcoefs(x_axis, y_axis, title="NO_TITLE", x_label="NO_LABEL", y_label="NO_LABEL", marker="o", linestyle=""):
+    high = np.ma.masked_where(np.abs(y_axis) < 0.1, y_axis)
+    low = np.ma.masked_where(np.abs(y_axis) >= 0.1, y_axis)
+
+    fig, ax = plt.subplots()
+    plt.title(title)
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    ax.plot(x_axis, high, color="green", marker=marker, linestyle=linestyle)
+    ax.plot(x_axis, low, color="red", marker=marker, linestyle=linestyle)
+
+    for i, j in zip(x_axis, low):
+        ax.annotate(str(int(i)), xy=(i - 0.4, j + 0.01))
+
+    plt.show()
+
 def prediction(w0, w1, mean_x, std_x):
     """Get the regression line from the model."""
     x = np.arange(1.2, 2, 0.01)

@@ -5,21 +5,19 @@ from data_loader import load_data, DATA_PATH_TEST, DATA_PATH_TRAIN, DATA_PATH_SA
 from implementations import *
 from label_predictor import predict_labels
 from csv_creator import create_csv
+from plots import print_stats, plot_label_feature_corrcoefs
 
 if __name__ == "__main__":
     """
     y_train, tx_train, ids_train = load_data(DATA_PATH_TRAIN)
     tx_train = np.c_[y_train, tx_train]
-#    tx_train = np.delete(tx_train, [4, 6, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], axis=1)
-
     corrcoefs = []
     for i, col_i in enumerate(tx_train.T):
-        for j, col_j in enumerate(tx_train.T):
-            if i < j and i != 1 and j != 1:
-                corrcoefs.append((i, j, np.corrcoef(col_i, col_j)[0][1]))
+        if i > 1:
+            cc = np.corrcoef(tx_train.T[0], col_i)[0][1]
+            corrcoefs.append(cc)
 
-    corrcoefs = list(map(lambda triple: triple[1], filter(lambda triple: triple[0] == 0 and abs(triple[2]) < 0.16, corrcoefs)))
-    print(corrcoefs)
+    plot_label_feature_corrcoefs(np.linspace(0, 29, 30), corrcoefs, "Correlation Coefficient Between the Features and the Label", "Features", "Correlation Coefficient")
     """
 
     """
@@ -64,10 +62,11 @@ if __name__ == "__main__":
         print(idx, pair)
     """
 
+    """
     print("Train")
     y_train, tx_train, ids_train = load_data(DATA_PATH_TRAIN)
-    tx_train = np.c_[y_train, tx_train]
-    tx_train = np.delete(tx_train, [0, 4, 6, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], axis=1)
+#    tx_train = np.c_[y_train, tx_train]
+#    tx_train = np.delete(tx_train, [0, 4, 6, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], axis=1)
 
 #    w, loss = gradient_descent.test_GD(y_train, tx_train)
 #    w, loss = gradient_descent.test_SGD(y_train, tx_train)
@@ -81,19 +80,11 @@ if __name__ == "__main__":
 
     print("Test")
     y_test, tx_test, ids_test = load_data(DATA_PATH_TEST)
-    tx_test = np.c_[y_test, tx_test]
-    tx_test = np.delete(tx_test, [0, 4, 6, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], axis=1)
+#    tx_test = np.c_[y_test, tx_test]
+#    tx_test = np.delete(tx_test, [0, 4, 6, 8, 9, 10, 11, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], axis=1)
 
     y_pred = predict_labels(w, tx_test)
-
-    y_len = len(y_pred)
-    y_pos = len(y_pred[y_pred == 1])
-    y_neg = len(y_pred[y_pred == -1])
-    print(" 1 ->", y_pos / y_len)
-    print("-1 ->", y_neg / y_len)
+    print_stats(y_pred)
 
     create_csv(ids_test, y_pred, DATA_PATH_SAMPLE_SUBMISSION_TEST)
-
-#    print("Print")
-#    for i in range(1000):
-#        print(y_pred[i])
+    """
