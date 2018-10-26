@@ -1,4 +1,3 @@
-import datetime
 import numpy as np
 
 def sigmoid(t):
@@ -28,8 +27,8 @@ def logistic_regression_gradient_descent(y, tx, gamma, max_iter):
         w = w - gamma * grad
         losses.append(loss)
         ws.append(w)
-        if(iter%100 == 0):
-            print("Current iteration={i}, loss={l}".format(i=iter, l=loss[0][0]))
+#         if(iter%100 == 0):
+#             print("Current iteration={i}, loss={l}".format(i=iter, l=loss[0][0]))
     return ws[len(ws) - 1].T[0], losses[len(losses) - 1][0][0]
             
 def regularized_logistic_regression(y, tx, w, lambd):
