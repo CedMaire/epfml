@@ -18,12 +18,10 @@ def remove_undefined_columns(x):
 def replace_undefined_values(x):
     tx_T = x.T
     for col in tx_T:
-#        values, counts = np.unique(col[col != UNDEFINED_VALUE], return_counts=True)
-#        ind = np.argmax(counts)
-#        col[np.where(col == UNDEFINED_VALUE)] = values[ind]
-        mean = np.mean(col[col != UNDEFINED_VALUE])
+        values, counts = np.unique(col[col != UNDEFINED_VALUE], return_counts=True)
+        ind = np.argmax(counts)
+        col[np.where(col == UNDEFINED_VALUE)] = values[ind]
 #        median = np.median(col[col != UNDEFINED_VALUE])
-        col[np.where(col == UNDEFINED_VALUE)] = mean
 #        col[np.where(col == UNDEFINED_VALUE)] = median
 #        col[np.where(col == UNDEFINED_VALUE)] = 0
 
@@ -41,7 +39,7 @@ def standardize(x):
 
 def build_model_data(y, x):
 #    x = remove_undefined_columns(x)
-#    x = replace_undefined_values(x)
+    x = replace_undefined_values(x)
 #    x = remove_samples(x)
     x = standardize(x)
 
