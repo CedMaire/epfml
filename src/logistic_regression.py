@@ -11,7 +11,7 @@ def calculate_gradient(y, tx, w):
     sigma = sigmoid(tx.dot(w))
     z = sigma - y
     grad = tx.T.dot(z)
-    return grad / len(sigma)
+    return grad / (len(sigma)/2)
 
 def logistic_regression_gradient_descent(y, tx, gamma, max_iter):
     # init parameters
@@ -33,8 +33,8 @@ def logistic_regression_gradient_descent(y, tx, gamma, max_iter):
             
 def regularized_logistic_regression(y, tx, w, lambd):
     num_samples = y.shape[0]
-    loss = calculate_loss(y, tx, w) + lambd * np.squeeze(w.T.dot(w))
-    gradient = calculate_gradient(y, tx, w) + 2 * lambd * w
+    loss = calculate_loss(y, tx, w) + (lambd * np.squeeze(w.T.dot(w)))/ num_samples
+    gradient = calculate_gradient(y, tx, w) + (2 * lambd * w)/ num_samples
     return loss, gradient
 
 def regularized_logistic_regression_gradient_descent(y, tx, gamma, max_iter, lambd):
