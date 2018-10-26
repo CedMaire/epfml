@@ -19,8 +19,8 @@ def replace_undefined_values(x):
     tx_T = x.T
     for col in tx_T:
         mean = np.mean(col[col != UNDEFINED_VALUE])
-#        col[np.where(col == UNDEFINED_VALUE)] = mean
-        col[np.where(col == UNDEFINED_VALUE)] = 0
+        col[np.where(col == UNDEFINED_VALUE)] = mean
+#        col[np.where(col == UNDEFINED_VALUE)] = 0
 
     return tx_T.T
 

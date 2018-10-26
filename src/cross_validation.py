@@ -1,12 +1,13 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[22]:
 
 
 import numpy as np
 from data_loader import load_data, DATA_PATH_TEST, DATA_PATH_TRAIN, DATA_PATH_SAMPLE_SUBMISSION_TEST
 import logistic_regression
+import gradient_descent
 import matplotlib.pyplot as plt
 from label_predictor import predict_labels
 
@@ -29,7 +30,7 @@ def build_k_indices(y, k_fold, seed):
     return np.array(k_indices)
 
 
-# In[6]:
+# In[30]:
 
 
 def cross_validation(y, x, k_indices, k):
@@ -42,7 +43,7 @@ def cross_validation(y, x, k_indices, k):
     x_test = x[test_indice]
     x_train = x[train_indice]
     
-    w, loss_train = logistic_regression.logistic_regression_gradient_descent(y_train, x_train, 0.999, 1000)
+    w, loss_train = logistic_regression.regularized_logistic_regression_gradient_descent(y_train, x_train, 0.1, 1000,0.3)
     loss_test = logistic_regression.calculate_loss(y_test, x_test, w)
     y_pred = predict_labels(w, x_test)
     counter = 0
@@ -54,7 +55,29 @@ def cross_validation(y, x, k_indices, k):
     return loss_train, loss_test,w
 
 
-# In[44]:
+# In[9]:
+
+
+def build_poly(tx, degree):
+    for idx, x in enumerate(tx.T):
+        if idx == 0:
+            arr_out = build_poly_one_column(x, degree)
+        else:
+            arr_out = np.c_[arr_out, build_poly_one_column(x, degree)]
+    return arr_out
+
+
+# In[10]:
+
+
+def build_poly_one_column(x, degree):
+    arr = np.zeros((x.shape[0], degree+1))
+    for degre in range(degree+1):
+        arr[:,degre] = np.power(x, degre)
+    return arr
+
+
+# In[31]:
 
 
 def cross_validation_demo():
@@ -69,6 +92,7 @@ def cross_validation_demo():
     loss_tr_tmp = []
     loss_te_tmp = []
     tx_train = np.delete(tx, [5, 12, 15, 18, 19, 20, 21, 23, 25, 27, 28, 29, 30], axis=1)
+    tx_train = build_poly(tx_train, 3)
     for k in range(k_fold):
         loss_tr, loss_te,_ = cross_validation(y, tx_train, k_indices, k)
         loss_tr_tmp.append(loss_tr)
@@ -76,4 +100,3 @@ def cross_validation_demo():
         print("the loss of the training set is: ", np.mean(loss_tr_tmp))
         print("the loss of the test set is: ", np.mean(loss_te_tmp))
 
-cross_validation_demo()

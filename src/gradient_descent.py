@@ -78,8 +78,8 @@ def test_GD(y, tx):
 
 def test_SGD(y, tx):
     # Define the parameters of the algorithm.
-    max_iters = 100
-    gamma = 0.007
+    max_iters = 1000
+    gamma = 0.01
     batch_size = 1
 
     # Initialization
