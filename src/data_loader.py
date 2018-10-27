@@ -90,5 +90,5 @@ def load_data(data_path, sub_sample=False):
         input_data = input_data[::50]
         ids = ids[::50]
 
-    y, tx = build_model_data(yb, input_data)
+    y, tx = build_model_data(yb, input_data, ids)
     return y, tx, ids

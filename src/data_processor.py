@@ -18,12 +18,12 @@ def remove_undefined_columns(x):
 def replace_undefined_values(x):
     tx_T = x.T
     for col in tx_T:
-        values, counts = np.unique(col[col != UNDEFINED_VALUE], return_counts=True)
-        ind = np.argmax(counts)
-        col[np.where(col == UNDEFINED_VALUE)] = values[ind]
+#        values, counts = np.unique(col[col != UNDEFINED_VALUE], return_counts=True)
+#        ind = np.argmax(counts)
+#        col[np.where(col == UNDEFINED_VALUE)] = values[ind]
 #        median = np.median(col[col != UNDEFINED_VALUE])
 #        col[np.where(col == UNDEFINED_VALUE)] = median
-#        col[np.where(col == UNDEFINED_VALUE)] = 0
+        col[np.where(col == UNDEFINED_VALUE)] = 0
 
     return tx_T.T
 
@@ -31,16 +31,27 @@ def remove_samples(x):
     x = x[np.min(x, axis=1) != UNDEFINED_VALUE,:]
     return x
 
+def split_data_meaningfuly(y, x, ids):
+    col_set_0 = np.asarray([2]) - 2
+    col_set_1 = np.asarray([6, 7, 8, 14, 28, 29, 30]) - 2
+    col_set_2 = np.asarray([25, 26, 27]) - 2
+
+    print(col_set_0)
+    print(col_set_1)
+    print(col_set_2)
+
 def standardize(x):
     centered = x - np.mean(x, axis=0)
     normed = centered / np.std(centered, axis=0)
 
     return normed
 
-def build_model_data(y, x):
+def build_model_data(y, x, ids):
 #    x = remove_undefined_columns(x)
     x = replace_undefined_values(x)
 #    x = remove_samples(x)
+#    split_data_meaningfuly(y, x, ids)
+#    raise TypeError
     x = standardize(x)
 
     return y, np.c_[np.ones(len(y)), x]

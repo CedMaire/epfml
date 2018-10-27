@@ -99,4 +99,3 @@ def cross_validation_demo():
         loss_te_tmp.append(loss_te)
         print("the loss of the training set is: ", np.mean(loss_tr_tmp))
         print("the loss of the test set is: ", np.mean(loss_te_tmp))
-
