@@ -67,6 +67,7 @@ if __name__ == "__main__":
     ys_train, txs_train, ids_train = load_data(DATA_PATH_TRAIN)
 
     for y_train, tx_train, id_train in zip(ys_train, txs_train, ids_train):
+        print(y_train.shape)
         print(y_train)
         print(tx_train)
         print(id_train)
