@@ -15,7 +15,7 @@ from label_predictor import predict_labels
 # In[2]:
 
 
-y, tx, ids_train = load_data(DATA_PATH_TRAIN)
+# y, tx, ids_train = load_data(DATA_PATH_TRAIN)
 
 
 # In[3]:

@@ -1,5 +1,6 @@
-Col is x - 2
+Col is x
 
+Column 24 (PRI_jet_num)			- DEFINES THE jet numbers
 Column 2 (DER_mass_MMC)			- MAY BE UNDEFINED (-999)
 
 Column 6 (DER_deltaeta_jet_jet)		- UNDEFINED IF PRI_jet_num <= 1

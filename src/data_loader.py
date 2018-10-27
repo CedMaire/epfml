@@ -85,10 +85,10 @@ def load_data(data_path, sub_sample=False):
 #    yb[np.where(y == "b")] = -1
     yb[np.where(y == "b")] = 0
 
-    if sub_sample:
-        yb = yb[::50]
-        input_data = input_data[::50]
-        ids = ids[::50]
+#    if sub_sample:
+#        yb = yb[::50]
+#        input_data = input_data[::50]
+#        ids = ids[::50]
 
-    y, tx = build_model_data(yb, input_data, ids)
-    return y, tx, ids
+    ys, txs, ids = build_model_data(yb, input_data, ids)
+    return ys, txs, ids
