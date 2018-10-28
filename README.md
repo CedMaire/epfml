@@ -88,7 +88,7 @@ Column 30 (PRI_jet_subleading_phi): azimuth angle (float) of subleading jet
 Column 31 (PRI_jet_all_pt): scalar sum (float) of the transverse momentum of all the jets of the events
 ```
 ## Authors
-Antonio Moraïs - antonio.morais@epfl.ch
+Antonio Morais - antonio.morais@epfl.ch
 
 Benjamin Délèze - benjamin.deleze@epfl.ch
 
