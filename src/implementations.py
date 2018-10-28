@@ -1,19 +1,59 @@
 import numpy as np
-from helpers import compute_mse
+import math
+from cost_computer import compute_loss
+from gradient_descent import compute_gradient, batch_iteration
+
+"""
+All the requested implementations.
+"""
 
 def least_squares_GD(y, tx, initial_w, max_iters, gamma):
-    w = None
-    loss = None
+    """
+    Computes the weights and the losses by applying the gradient descent algorithm.
 
-    raise NotImplementedError
+    :param y: expected labels vector
+    :param tx: data matrix
+    :param initial_w: the initial weights to start with
+    :param max_iters: the maximal number of iterations to apply
+    :param gamma: the gamma factor to apply to the gradient
+    :returns: w - computed weights
+              loss - computed loss
+    """
+
+    w = initial_w
+    loss = math.inf
+
+    for i in range(max_iters):
+        gradient, _ = compute_gradient(y, tx, w)
+
+        w = w - gamma * gradient
+        loss = compute_loss(y, tx, w)
 
     return w, loss
 
 def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
-    w = None
-    loss = None
+    """
+    Computes the weights and the losses by applying the stochastic gradient descent algorithm with a batch size of 1.
 
-    raise NotImplementedError
+    :param y: expected labels vector
+    :param tx: data matrix
+    :param initial_w: the initial weights to start with
+    :param max_iters: the maximal number of iterations to apply
+    :param gamma: the gamma factor to apply to the gradient
+    :returns: w - computed weights
+              loss - computed loss
+    """
+
+    w = initial_w
+    loss = math.inf
+
+    for i in range(max_iters):
+        y_rand, tx_rand = batch_iteration(y, tx)
+
+        gradient, _ = compute_gradient(y_rand, tx_rand, w)
+
+        w = w - gamma * gradient
+        loss = compute_loss(y, tx, w)
 
     return w, loss
 
@@ -24,7 +64,7 @@ def least_squares(y, tx):
     txTdotY = np.dot(txTransposed, y)
     w = np.linalg.solve(txDotT, txTdotY)
 
-    loss = np.sqrt(2 * compute_mse(y, tx, w))
+    loss = np.sqrt(2 * compute_loss(y, tx, w))
 
     return w, loss
 
