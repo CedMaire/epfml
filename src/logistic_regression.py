@@ -15,9 +15,10 @@ def calculate_loss(y, tx, w):
 def calculate_gradient(y, tx, w):
     #calculate the sigma
     sigma = logistic_function(np.matmul(tx,w))
-    
+
     z = sigma - y
     grad = np.matmul(tx.T,z)
+
     return grad / (len(sigma)/2)
 
 def logistic_regression_gradient_descent(y, tx, gamma, max_iter):
@@ -26,7 +27,6 @@ def logistic_regression_gradient_descent(y, tx, gamma, max_iter):
     w = np.zeros((tx.shape[1], 1))
     ws = [w]
     y = np.array([y])
-    y = y.T
     
     for iter in range(max_iter):
         grad = calculate_gradient(y, tx, w)
@@ -37,11 +37,6 @@ def logistic_regression_gradient_descent(y, tx, gamma, max_iter):
 
     return ws[len(ws) - 1].T[0], losses[len(losses) - 1][0][0]
             
-def regularized_logistic_regression(y, tx, w, lambd):
-    
-    loss = 
-    gradient = 
-    return loss, gradient
 
 def regularized_logistic_regression_gradient_descent(y, tx, gamma, max_iter, lambd):
     # initialize parameters
@@ -49,7 +44,6 @@ def regularized_logistic_regression_gradient_descent(y, tx, gamma, max_iter, lam
     w = np.zeros((tx.shape[1], 1))
     ws = [w]
     y = np.array([y])
-    y = y.T
     size = len(w)
     for iter in range(max_iter):
         grad = calculate_gradient(y, tx, w) + (2 * lambd * w)/ size

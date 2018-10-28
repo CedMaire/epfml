@@ -2,6 +2,7 @@ import numpy as np
 import math
 from cost_computer import compute_loss
 from gradient_descent import compute_gradient, batch_iteration
+from logistic_regression import calculate_gradient, calculate_loss
 
 """
 All the requested implementations.
@@ -81,17 +82,27 @@ def ridge_regression(y, tx, lambda_):
     return w, loss
 
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
-    w = None
+    # initinalize parameters
+    losses = []
+    w = initial_w
     loss = None
 
-    raise NotImplementedError
+    
+    for iter in range(max_iters):
+        grad = calculate_gradient(y, tx, w)
+        loss = calculate_loss(y, tx, w)
+        w = w - gamma * grad
 
     return w, loss
 
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
-    w = None
+    # initialize parameters
     loss = None
-
-    raise NotImplementedError
-
+    w = initial_w
+    size = len(w)
+    for iter in range(max_iters):
+        grad = calculate_gradient(y, tx, w) + (2 * lambda_ * w)/ size
+        loss = calculate_loss(y, tx, w) + (lambda_ * np.matmul(w.T, w))/ size
+        w = w - gamma * grad
+        
     return w, loss

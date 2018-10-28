@@ -32,8 +32,8 @@ def load_data(data_path):
     input_data = x[:, 2:]
 
     yb = np.ones(len(y))
-    # yb[np.where(y == "b")] = -1
-    yb[np.where(y == "b")] = 0
+    yb[np.where(y == "b")] = -1
+    #yb[np.where(y == "b")] = 0
 
     ys, txs, ids = build_model_data(yb, input_data, ids)
 
