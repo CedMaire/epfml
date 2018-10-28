@@ -31,4 +31,4 @@ def batch_iteration(y, tx):
     """
 
     rand = np.random.randint(len(y))
-    return y[rand], tx[rand]
+    return np.asarray([y[rand]]), np.asarray([tx[rand]])

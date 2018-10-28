@@ -76,7 +76,7 @@ def ridge_regression(y, tx, lambda_):
     b = tx.T.dot(y)
     w = np.linalg.solve(a, b)
     
-    loss = np.sqrt(2 * compute_mse(y, tx, w))
+    loss = np.sqrt(2 * compute_loss(y, tx, w))
     
     return w, loss
 
