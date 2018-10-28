@@ -1,7 +1,7 @@
 # EPFML - Higgs Boson Machine Learning Project
 
 ## Folders
-* `data/` should contain the train and test data
+* `data/` should contain the train and test data (should be at the same level as `src/`)
 * `src/` contains all the source files
 
 ## How To
