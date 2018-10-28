@@ -1,56 +1,61 @@
 import numpy as np
 
-def sigmoid(t):
-    return 1.0 / (1 + np.exp(-t))
+def logistic_function(z):
+    return 1.0 / (1 + np.exp(-z))
 
 def calculate_loss(y, tx, w):
-    sigma = sigmoid(tx.dot(w))
-    return -(y.T.dot(np.log(sigma)) + (1 - y).T.dot(np.log(1 - sigma))) / len(sigma)
+    #calculate the sigma
+    sigma = logistic_function(tx.dot(w))
+    #compute the loss for the two classes
+    loss_1 = -np.matmul(y.T,(np.log(sigma)))
+    loss_2 = np.matmul((1 - y).T,(np.log(1 - sigma)))
+    
+    return loss_1 + loss_2 / len(sigma)
 
 def calculate_gradient(y, tx, w):
-    sigma = sigmoid(tx.dot(w))
+    #calculate the sigma
+    sigma = logistic_function(np.matmul(tx,w))
+    
     z = sigma - y
-    grad = tx.T.dot(z)
+    grad = np.matmul(tx.T,z)
     return grad / (len(sigma)/2)
 
 def logistic_regression_gradient_descent(y, tx, gamma, max_iter):
-    # init parameters
+    # initinalize parameters
     losses = []
-    # initialize
     w = np.zeros((tx.shape[1], 1))
     ws = [w]
     y = np.array([y])
     y = y.T
+    
     for iter in range(max_iter):
         grad = calculate_gradient(y, tx, w)
         loss = calculate_loss(y, tx, w)
         w = w - gamma * grad
         losses.append(loss)
         ws.append(w)
-#         if(iter%100 == 0):
-#             print("Current iteration={i}, loss={l}".format(i=iter, l=loss[0][0]))
+
     return ws[len(ws) - 1].T[0], losses[len(losses) - 1][0][0]
             
 def regularized_logistic_regression(y, tx, w, lambd):
-    num_samples = y.shape[0]
-    loss = calculate_loss(y, tx, w) + (lambd * np.squeeze(w.T.dot(w)))/ num_samples
-    gradient = calculate_gradient(y, tx, w) + (2 * lambd * w)/ num_samples
+    
+    loss = 
+    gradient = 
     return loss, gradient
 
 def regularized_logistic_regression_gradient_descent(y, tx, gamma, max_iter, lambd):
-    # init parameters
+    # initialize parameters
     losses = []
-    # initialize
     w = np.zeros((tx.shape[1], 1))
     ws = [w]
     y = np.array([y])
     y = y.T
+    size = len(w)
     for iter in range(max_iter):
-        loss, grad = regularized_logistic_regression(y, tx, w, lambd)
+        grad = calculate_gradient(y, tx, w) + (2 * lambd * w)/ size
+        loss = calculate_loss(y, tx, w) + (lambd * np.matmul(w.T, w))/ size
         w = w - gamma * grad
         losses.append(loss)
         ws.append(w)
-        if(iter%100 == 0):
-            pass
-#            print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
+        
     return ws[len(ws) - 1].T[0], losses[len(losses) - 1][0][0]
