@@ -1,8 +1,16 @@
+import pprint
 import numpy as np
 from data_loader import load_data, DATA_PATH_TRAIN
 from implementations import least_squares_GD, least_squares_SGD, least_squares, ridge_regression, logistic_regression, reg_logistic_regression
 from label_predictor import predict_labels
 from cross_validation import build_poly
+
+METH_LS_GD = "least_squares_GD"
+METH_LS_SGD = "least_squares_SGD"
+METH_LS = "least_squares"
+METH_RR = "ridge_regression"
+METH_LR = "logistic_regression"
+METH_RLR = "reg_logistic_regression"
 
 # Helper Functions
 def compute_correctness(y, tx, w):
@@ -37,27 +45,53 @@ def print_stats(method_name, loss, correctness):
 if __name__ == "__main__":
     print("Data loading...")
     ys_train, txs_train, ids_train = load_data(DATA_PATH_TRAIN)
+    total_samples = np.sum(list(map(lambda ids: len(ids), ids_train)))
+
+    correctness_dict =  {
+                            METH_LS_GD: 0,
+                            METH_LS_SGD: 0,
+                            METH_LS: 0,
+                            METH_RR: 0,
+                            METH_LR: 0,
+                            METH_RLR: 0
+                        }
 
     print("Computing ws...")
     for index, model in enumerate(zip(ys_train, txs_train, ids_train)):
         print("\tModel ", index)
 
         y_train, tx_train, id_train = model[0], model[1], model[2]
+        model_samples = len(id_train)
 
         w, loss = least_squares_GD(y_train, tx_train, np.asarray(np.zeros(len(tx_train[0]))), 1000, 0.2)
-        print_stats("least_squares_GD", loss, compute_correctness(y_train, tx_train, w))
+        correctness = compute_correctness(y_train, tx_train, w)
+        correctness_dict[METH_LS_GD] += (model_samples / total_samples) * correctness
+        print_stats(METH_LS_GD, loss, correctness)
 
         w, loss = least_squares_SGD(y_train, tx_train, np.asarray(np.zeros(len(tx_train[0]))), 1000, 0.005)
-        print_stats("least_squares_SGD", loss, compute_correctness(y_train, tx_train, w))
+        correctness = compute_correctness(y_train, tx_train, w)
+        correctness_dict[METH_LS_SGD] += (model_samples / total_samples) * correctness
+        print_stats(METH_LS_SGD, loss, correctness)
 
         w, loss = least_squares(y_train, tx_train)
-        print_stats("least_squares", loss, compute_correctness(y_train, tx_train, w))
+        correctness = compute_correctness(y_train, tx_train, w)
+        correctness_dict[METH_LS] += (model_samples / total_samples) * correctness
+        print_stats(METH_LS, loss, correctness)
 
         w, loss = ridge_regression(y_train, tx_train, 0.1)
-        print_stats("ridge_regression", loss, compute_correctness(y_train, tx_train, w))
+        correctness = compute_correctness(y_train, tx_train, w)
+        correctness_dict[METH_RR] += (model_samples / total_samples) * correctness
+        print_stats(METH_RR, loss, correctness)
 
-        w, loss = logistic_regression(y_train, tx_train, np.asarray(np.zeros(len(tx_train[0]))), 1000, 0.9)
-        print_stats("logistic_regression", loss, compute_correctness(y_train, tx_train, w))
+        w, loss = logistic_regression(y_train, tx_train, np.asarray(np.zeros(len(tx_train[0]))), 1000, 0.001)
+        correctness = compute_correctness(y_train, tx_train, w)
+        correctness_dict[METH_LR] += (model_samples / total_samples) * correctness
+        print_stats(METH_LR, loss, correctness)
 
-        w, loss = reg_logistic_regression(y_train, tx_train, 0.1, np.asarray(np.zeros(len(tx_train[0]))), 1000, 0.9)
-        print_stats("reg_logistic_regression", loss, compute_correctness(y_train, tx_train, w))
+        w, loss = reg_logistic_regression(y_train, tx_train, 0.001, np.asarray(np.zeros(len(tx_train[0]))), 1000, 0.001)
+        correctness = compute_correctness(y_train, tx_train, w)
+        correctness_dict[METH_RLR] += (model_samples / total_samples) * correctness
+        print_stats(METH_RLR, loss, correctness)
+
+    print("Average Correctness:")
+    pprint.pprint(correctness_dict)

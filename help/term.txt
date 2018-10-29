@@ -1,0 +1,161 @@
+Data loading...
+Computing ws...
+	Model  0
+		least_squares_GD
+			loss:		0.09
+			correctness:	0.94
+		least_squares_SGD
+			loss:		0.10
+			correctness:	0.95
+		least_squares
+			loss:		0.43
+			correctness:	0.94
+		ridge_regression
+			loss:		0.45
+			correctness:	0.94
+		logistic_regression
+			loss:		-2.42
+			correctness:	0.94
+		reg_logistic_regression
+			loss:		-2.42
+			correctness:	0.94
+	Model  1
+		least_squares_GD
+			loss:		0.14
+			correctness:	0.91
+		least_squares_SGD
+			loss:		0.18
+			correctness:	0.91
+		least_squares
+			loss:		0.53
+			correctness:	0.91
+		ridge_regression
+			loss:		0.55
+			correctness:	0.91
+		logistic_regression
+			loss:		-2.19
+			correctness:	0.91
+		reg_logistic_regression
+			loss:		-2.19
+			correctness:	0.91
+	Model  2
+		least_squares_GD
+			loss:		0.17
+			correctness:	0.90
+		least_squares_SGD
+			loss:		0.18
+			correctness:	0.88
+		least_squares
+			loss:		0.57
+			correctness:	0.90
+		ridge_regression
+			loss:		0.59
+			correctness:	0.90
+		logistic_regression
+			loss:		-2.26
+			correctness:	0.89
+		reg_logistic_regression
+			loss:		-2.26
+			correctness:	0.89
+	Model  3
+		least_squares_GD
+			loss:		0.11
+			correctness:	0.93
+		least_squares_SGD
+			loss:		0.15
+			correctness:	0.93
+		least_squares
+			loss:		0.48
+			correctness:	0.93
+		ridge_regression
+			loss:		0.50
+			correctness:	0.93
+		logistic_regression
+			loss:		-2.28
+			correctness:	0.93
+		reg_logistic_regression
+			loss:		-2.28
+			correctness:	0.93
+	Model  4
+		least_squares_GD
+			loss:		0.31
+			correctness:	0.78
+		least_squares_SGD
+			loss:		0.36
+			correctness:	0.76
+		least_squares
+			loss:		0.79
+			correctness:	0.78
+		ridge_regression
+			loss:		0.81
+			correctness:	0.78
+		logistic_regression
+			loss:		-1.42
+			correctness:	0.76
+		reg_logistic_regression
+			loss:		-1.42
+			correctness:	0.76
+	Model  5
+		least_squares_GD
+			loss:		0.39
+			correctness:	0.69
+		least_squares_SGD
+			loss:		0.42
+			correctness:	0.67
+		least_squares
+			loss:		0.89
+			correctness:	0.69
+		ridge_regression
+			loss:		0.89
+			correctness:	0.69
+		logistic_regression
+			loss:		-0.98
+			correctness:	0.64
+		reg_logistic_regression
+			loss:		-0.98
+			correctness:	0.64
+	Model  6
+		least_squares_GD
+			loss:		0.36
+			correctness:	0.73
+		least_squares_SGD
+			loss:		0.38
+			correctness:	0.72
+		least_squares
+			loss:		0.85
+			correctness:	0.73
+		ridge_regression
+			loss:		0.86
+			correctness:	0.72
+		logistic_regression
+			loss:		-0.70
+			correctness:	0.68
+		reg_logistic_regression
+			loss:		-0.70
+			correctness:	0.68
+	Model  7
+		least_squares_GD
+			loss:		0.37
+			correctness:	0.71
+		least_squares_SGD
+			loss:		0.39
+			correctness:	0.70
+		least_squares
+			loss:		0.86
+			correctness:	0.71
+		ridge_regression
+			loss:		0.87
+			correctness:	0.71
+		logistic_regression
+			loss:		-1.13
+			correctness:	0.70
+		reg_logistic_regression
+			loss:		-1.13
+			correctness:	0.70
+Average Correctness:
+{'least_squares': 0.764868,
+ 'least_squares_GD': 0.764884,
+ 'least_squares_SGD': 0.74796,
+ 'logistic_regression': 0.735068,
+ 'reg_logistic_regression': 0.735064,
+ 'ridge_regression': 0.760192}

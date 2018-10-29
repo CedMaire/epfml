@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 """
@@ -26,10 +27,15 @@ def calculate_loss(y, tx, w):
 
     sigma = logistic_function(tx.dot(w))
 
-    loss_1 = -np.matmul(y.T, (np.log(sigma)))
-    loss_2 = np.matmul((1 - y).T, (np.log(1 - sigma)))
+    with np.errstate(divide='ignore'):
+        loss_1 = -np.matmul(y.T, (np.log(sigma)))
+        loss_2 = np.matmul((1 - y).T, (np.log(1 - sigma)))
 
-    return loss_1 + loss_2 / len(sigma)
+    loss = (loss_1 + loss_2) / len(sigma)
+    if np.isnan(loss):
+        loss = -math.inf
+
+    return loss
 
 def calculate_gradient(y, tx, w):
     """
