@@ -33,7 +33,7 @@ def load_data(data_path):
 
     yb = np.ones(len(y))
     yb[np.where(y == "b")] = -1
-    #yb[np.where(y == "b")] = 0
+#    yb[np.where(y == "b")] = 0
 
     ys, txs, ids = build_model_data(yb, input_data, ids)
 
