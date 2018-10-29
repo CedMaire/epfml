@@ -109,7 +109,7 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
     :returns: w - computed weights
               loss - computed loss
     """
-
+    y[np.where(y == -1)] = 0
     w = initial_w
     loss = math.inf
 
@@ -134,7 +134,7 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     :returns: w - computed weights
               loss - computed loss
     """
-
+    y[np.where(y == -1)] = 0
     loss = math.inf
     w = initial_w
     size = len(w)
