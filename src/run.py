@@ -1,7 +1,7 @@
 import numpy as np
 from data_loader import load_data, DATA_PATH_TRAIN, DATA_PATH_TEST, DATA_PATH_SAMPLE_SUBMISSION_TEST
 from label_predictor import predict_labels
-from cross_validation import build_poly, cross_validation_search_param
+from cross_validation import build_poly
 from csv_creator import create_csv
 from implementations import ridge_regression
 
@@ -22,31 +22,6 @@ def print_stats(y_pred):
 if __name__ == "__main__":
     print("Loading train data...")
     ys_train, txs_train, ids_train = load_data(DATA_PATH_TRAIN)
-#    total_samples = np.sum(list(map(lambda ids: len(ids), ids_train)))
-#
-#    print("Training...")
-#    best_lambdas = []
-#    best_degrees = []
-#    best_ratios = []
-#    best_ws = []
-#    for index, model in enumerate(zip(ys_train, txs_train, ids_train)):
-#        print("Set:", index)
-#        y_train, tx_train, id_train = model[0], model[1], model[2]
-#        model_samples = len(id_train)
-#
-#        best_lambda, best_degree, best_ratio, best_w = cross_validation_search_param(y_train, tx_train, index)
-#        best_lambdas.append(best_lambda)
-#        best_degrees.append(best_degree)
-#        best_ratios.append((model_samples / total_samples, best_ratio))
-#        best_ws.append(best_w)
-#
-#    for l, d, r, w in zip(best_lambdas, best_degrees, best_ratios, best_ws):
-#        print("-------------------------------------------")
-#        print("lambda:", l, "degree:", d, "ratio", r[1])
-#        print(list(w))
-#
-#    print("-------------------------------------------")
-#    print("Correctness:", np.sum(np.asarray(list(map(lambda pair: pair[0] * pair[1], best_ratios)))))
 
     print("Loading test data...")
     ys_test, txs_test, ids_test = load_data(DATA_PATH_TEST)
