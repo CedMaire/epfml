@@ -77,7 +77,9 @@ if __name__ == "__main__":
         correctness = compute_correctness(y_train, tx_train, w)
         correctness_dict[METH_LS] += (model_samples / total_samples) * correctness
         print_stats(METH_LS, loss, correctness)
-
+        
+        tx_train = build_poly(tx_train, 3)
+        
         w, loss = ridge_regression(y_train, tx_train, 0.1)
         correctness = compute_correctness(y_train, tx_train, w)
         correctness_dict[METH_RR] += (model_samples / total_samples) * correctness
