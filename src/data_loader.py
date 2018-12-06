@@ -8,6 +8,8 @@ Functions related to data loading from the disk.
 
 ROOT_DIR = "data/training/"
 IMAGE_DIR = ROOT_DIR + "images/"
+TEST_IMAGE_DIR = "data/test_set_images/images/"
+
 GROUNDTRUTH_DIR = ROOT_DIR + "groundtruth/"
 
 def load_image(file_):
@@ -44,3 +46,24 @@ def load_images(max_to_load=None):
     images_groundtruth = [load_image(GROUNDTRUTH_DIR + files[i]) for i in range(max_to_load)]
 
     return images, images_groundtruth
+
+def load_test_images(max_to_load=None):
+    """
+    Loads all images version from the test folder.
+
+    (Function greatly inspired from the given file "segment_aerial_images.ipynb" given by the professor.)
+
+    :param max_to_load: the maximum number of images to load
+    :returns: images - the images
+    """
+
+    files = os.listdir(TEST_IMAGE_DIR)
+
+    if max_to_load == None:
+        max_to_load = len(files)
+
+    print("Loading " + str(max_to_load) + " images...")
+    images = [load_image(TEST_IMAGE_DIR + files[i] + "/" + files[i] + ".png") for i in range(max_to_load)]
+
+    return images
+

@@ -1,8 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 import data_loader
+from mask_to_submission import masks_to_submission
 from learn import model_linear_logistic_regression
 from PIL import Image
+from skimage import color
 
 """
 Functions related to data processing.
@@ -132,6 +135,19 @@ def extract_features_mean_var_6d(image):
 
     return np.append(np.mean(image, axis=(0,1)), np.var(image, axis=(0,1)))
 
+def extract_features_mean_var_12d(image):
+    """
+    Extracts 6-dimensional features for the mean and variance of an image/patch.
+
+    (Function greatly inspired from the given file "segment_aerial_images.ipynb" given by the professor.)
+
+    :param image: the images to get the features from
+    :returns: features - generated features from image/patch
+    """
+
+    return np.append(np.append(np.append(np.mean(image, axis=(0,1)), np.var(image, axis=(0,1))), np.mean(color.rgb2gray(image), axis=(0,1))), np.var(color.rgb2gray(image), axis=(0,1)))
+
+
 def extract_features_mean_var_2d(image):
     """
     Extracts 2-dimensional features for the mean and variance of an image/patch.
@@ -169,7 +185,7 @@ def build_model(patches_images, patches_groundtruth):
               X - the features matrix
     """
 
-    X = np.asarray([extract_features_mean_var_2d(patch) for patch in patches_images])
+    X = np.asarray([extract_features_mean_var_12d(patch) for patch in patches_images])
     Y = np.asarray([value_to_class(np.mean(patch)) for patch in patches_groundtruth])
     print("Computed " + str(X.shape[0]) + " features.")
     print("Feature dimension = " + str(X.shape[1]))
@@ -246,18 +262,37 @@ def extract_image_features(image, patch_size=16):
 
     image_patches = crop_image(image, patch_size, patch_size)
 
-    return np.asarray([extract_features_mean_var_2d(patch) for patch in image_patches])
+    return np.asarray([extract_features_mean_var_12d(patch) for patch in image_patches])
+
+def create_test_submission(images_test, logistic_regression):
+    submission_filename = 'data/test_submission.csv'
+    image_filenames = []
+    for i in range(0, 50):
+        Xi = extract_image_features(images_test[i])
+        Zi = logistic_regression.predict(Xi)
+        width, height = images_test[i].shape[0], images_test[i].shape[1]
+        predicted_image = labels_to_image(width, height, patch_size, patch_size, Zi)
+        image_filename = 'data/test_set_images/groundtruth/satImage_' + '%.3d' % (i + 1) + '.png'
+        mpimg.imsave(image_filename, predicted_image)
+        #print(image_filename)
+        image_filenames.append(image_filename)
+    masks_to_submission(submission_filename, *image_filenames)
 
 if __name__ == "__main__":
     patch_size = 16
     images, images_groundtruth = data_loader.load_images()
+    images_test = data_loader.load_test_images()
     patches_images, patches_groundtruth = generate_patches(images, images_groundtruth, patch_size=patch_size)
     Y, X = build_model(patches_images, patches_groundtruth)
 
-    image_index = 12
-    Xi = extract_image_features(images[image_index])
-    logistic_regression = model_linear_logistic_regression(Y, X)
+    #image_index = 2
+    #Xi = extract_image_features(images[image_index])
+    logistic_regression = model_linear_logistic_regression(Y, X)    
+    
+    create_test_submission(images_test, logistic_regression)
+    """
     Zi = logistic_regression.predict(Xi)
+    
     plt.scatter(Xi[:,0], Xi[:,1], c=Zi, edgecolors="k", cmap=plt.cm.Paired)
     plt.show()
 
@@ -270,3 +305,4 @@ if __name__ == "__main__":
     new_image = image_overlay(images[image_index], predicted_image)
     plt.imshow(new_image)
     plt.show()
+    """
