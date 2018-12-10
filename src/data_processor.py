@@ -6,7 +6,12 @@ from mask_to_submission import masks_to_submission
 from learn import model_linear_logistic_regression
 from PIL import Image
 from skimage import color
-
+from sklearn import linear_model
+from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import RidgeCV
+from PIL import Image
+from matplotlib import cm
 """
 Functions related to data processing.
 """
@@ -185,7 +190,7 @@ def build_model(patches_images, patches_groundtruth):
               X - the features matrix
     """
 
-    X = np.asarray([extract_features_mean_var_12d(patch) for patch in patches_images])
+    X = np.asarray([extract_features_mean_var_6d(patch) for patch in patches_images])
     Y = np.asarray([value_to_class(np.mean(patch)) for patch in patches_groundtruth])
     print("Computed " + str(X.shape[0]) + " features.")
     print("Feature dimension = " + str(X.shape[1]))
@@ -195,11 +200,11 @@ def build_model(patches_images, patches_groundtruth):
     Y1 = [i for i, j in enumerate(Y) if j == 1]
     print("Class 0: " + str(len(Y0)) + " samples")
     print("Class 1: " + str(len(Y1)) + " samples")
-
+    """
     show_image(patches_groundtruth[Y1[3]])
     plt.scatter(X[:, 0], X[:, 1], c=Y, edgecolors="k", cmap=plt.cm.Paired)
     plt.show()
-
+    """
     return Y, X
 
 def labels_to_image(image_width, image_height, width, height, labels):
@@ -262,19 +267,21 @@ def extract_image_features(image, patch_size=16):
 
     image_patches = crop_image(image, patch_size, patch_size)
 
-    return np.asarray([extract_features_mean_var_12d(patch) for patch in image_patches])
+    return np.asarray([extract_features_mean_var_6d(patch) for patch in image_patches])
 
-def create_test_submission(images_test, logistic_regression):
+def create_test_submission(images_test, ridge_regression):
     submission_filename = 'data/test_submission.csv'
     image_filenames = []
     for i in range(0, 50):
         Xi = extract_image_features(images_test[i])
-        Zi = logistic_regression.predict(Xi)
+        #poly = PolynomialFeatures(2, True)
+        #Xi = poly.fit_transform(Xi)
+        Zi = ridge_regression.predict(Xi)
         width, height = images_test[i].shape[0], images_test[i].shape[1]
         predicted_image = labels_to_image(width, height, patch_size, patch_size, Zi)
         image_filename = 'data/test_set_images/groundtruth/satImage_' + '%.3d' % (i + 1) + '.png'
-        mpimg.imsave(image_filename, predicted_image)
-        #print(image_filename)
+        imag = Image.fromarray(np.uint8(cm.gist_earth(predicted_image)*255))
+        imag.save(image_filename)
         image_filenames.append(image_filename)
     masks_to_submission(submission_filename, *image_filenames)
 
@@ -283,16 +290,25 @@ if __name__ == "__main__":
     images, images_groundtruth = data_loader.load_images()
     images_test = data_loader.load_test_images()
     patches_images, patches_groundtruth = generate_patches(images, images_groundtruth, patch_size=patch_size)
-    Y, X = build_model(patches_images, patches_groundtruth)
-
+    
     #image_index = 2
     #Xi = extract_image_features(images[image_index])
-    logistic_regression = model_linear_logistic_regression(Y, X)    
-    
+       
+    Y, X = build_model(patches_images, patches_groundtruth)
+    logistic_regression = linear_model.LogisticRegression(C=1e5, class_weight="balanced")
+    #logistic_regression = model_linear_logistic_regression(Y, X) 
+    #poly = PolynomialFeatures(2, True)
+    #X = poly.fit_transform(X)
+    scores = cross_val_score(logistic_regression, X, Y, cv=5)
+    print(scores)
+    logistic_regression.fit(X, Y)
     create_test_submission(images_test, logistic_regression)
     """
+    Y, X = build_model(patches_images, patches_groundtruth)
+    logistic_regression = model_linear_logistic_regression(Y,X) 
+    Xi = extract_image_features(images[1])
     Zi = logistic_regression.predict(Xi)
-    
+    print(Zi)
     plt.scatter(Xi[:,0], Xi[:,1], c=Zi, edgecolors="k", cmap=plt.cm.Paired)
     plt.show()
 
