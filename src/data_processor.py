@@ -9,9 +9,11 @@ from skimage import color
 from sklearn import linear_model
 from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import RidgeCV
-from PIL import Image
 from matplotlib import cm
+from sklearn.metrics import f1_score
+from sklearn.model_selection import KFold
+
+TEST_IMAGE_DIR = "data/test_set_images/images/"
 """
 Functions related to data processing.
 """
@@ -269,17 +271,19 @@ def extract_image_features(image, patch_size=16):
 
     return np.asarray([extract_features_mean_var_6d(patch) for patch in image_patches])
 
-def create_test_submission(images_test, ridge_regression):
+def create_test_submission(ridge_regression):
     submission_filename = 'data/test_submission.csv'
     image_filenames = []
-    for i in range(0, 50):
-        Xi = extract_image_features(images_test[i])
-        #poly = PolynomialFeatures(2, True)
-        #Xi = poly.fit_transform(Xi)
+    for i in range(1, 51):
+        test_image = data_loader.load_image(TEST_IMAGE_DIR + "test_"+ '%.1d' % i + "/" + "test_"+ '%.1d' % i + ".png")
+        Xi = extract_image_features(test_image)
+        poly = PolynomialFeatures(4)
+        Xi = poly.fit_transform(Xi)
         Zi = ridge_regression.predict(Xi)
-        width, height = images_test[i].shape[0], images_test[i].shape[1]
+        width, height = test_image[i].shape[0], test_image.shape[1]
         predicted_image = labels_to_image(width, height, patch_size, patch_size, Zi)
-        image_filename = 'data/test_set_images/groundtruth/satImage_' + '%.3d' % (i + 1) + '.png'
+        image_filename = 'data/test_set_images/groundtruth/satImage_' + '%.3d' % i + '.png'
+        #mpimg.imsave(image_filename, test_image)
         imag = Image.fromarray(np.uint8(cm.gist_earth(predicted_image)*255))
         imag.save(image_filename)
         image_filenames.append(image_filename)
@@ -288,21 +292,35 @@ def create_test_submission(images_test, ridge_regression):
 if __name__ == "__main__":
     patch_size = 16
     images, images_groundtruth = data_loader.load_images()
-    images_test = data_loader.load_test_images()
+    #images_test = data_loader.load_test_images()
     patches_images, patches_groundtruth = generate_patches(images, images_groundtruth, patch_size=patch_size)
     
     #image_index = 2
     #Xi = extract_image_features(images[image_index])
        
     Y, X = build_model(patches_images, patches_groundtruth)
-    logistic_regression = linear_model.LogisticRegression(C=1e5, class_weight="balanced")
+    logistic_regression = linear_model.LogisticRegression(C=1e10, class_weight="balanced")
     #logistic_regression = model_linear_logistic_regression(Y, X) 
-    #poly = PolynomialFeatures(2, True)
-    #X = poly.fit_transform(X)
-    scores = cross_val_score(logistic_regression, X, Y, cv=5)
-    print(scores)
+    poly = PolynomialFeatures(4)
+    X = poly.fit_transform(X)
+    
+    """
+    kf = KFold(n_splits=4)
+    kf.get_n_splits(X)
+    for train_index, test_index in kf.split(X):
+        logistic_regression = linear_model.LogisticRegression(C=1e10, class_weight="balanced")
+        X_train, X_test = X[train_index], X[test_index]
+        y_train, y_test = Y[train_index], Y[test_index]
+        poly = PolynomialFeatures(4)
+        X_train = poly.fit_transform(X_train)
+        X_test = poly.fit_transform(X_test)
+        logistic_regression.fit(X_train, y_train)
+        print(f1_score(y_test, logistic_regression.predict(X_test), average='macro')) 
+    """
+    #scores = cross_val_score(logistic_regression, X, Y, cv=5)
+    #print(scores)
     logistic_regression.fit(X, Y)
-    create_test_submission(images_test, logistic_regression)
+    create_test_submission(logistic_regression)
     """
     Y, X = build_model(patches_images, patches_groundtruth)
     logistic_regression = model_linear_logistic_regression(Y,X) 
