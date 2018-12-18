@@ -1,6 +1,7 @@
 # Own
 data/
 predictions_training/
+*.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -165,8 +165,12 @@ def flip_images(images, flip_code):
 if __name__ == "__main__":
     images, images_groundtruth = load_images()
     images_test = load_images_test()
-    gen_rotated_images(images, images_groundtruth, images_test, save=False)
+    gen_rotated_images(images, images_groundtruth, images_test, save=True)
 
     images_flipped_x, images_groundtruth_flipped_x = flip_images(images, FLIP_CODE_X), flip_images(images_groundtruth, FLIP_CODE_X)
     images_test_flipped_x = flip_images(images_test, FLIP_CODE_X)
-    gen_rotated_images(images_flipped_x, images_groundtruth_flipped_x, images_test_flipped_x, save=False)
+
+    save_images(images_flipped_x, images_groundtruth_flipped_x)
+    save_images_test(images_test_flipped_x)
+
+    gen_rotated_images(images_flipped_x, images_groundtruth_flipped_x, images_test_flipped_x, save=True)
