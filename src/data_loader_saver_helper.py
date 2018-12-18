@@ -4,6 +4,10 @@ This file contains several functions to load/save and extract data/label from im
 Benjamin Délèze, Cedric Maire, Antonio Morais
 """
 
+import os
+import matplotlib.image as mpimg
+import numpy as np
+
 def img_crop(im, w, h):
     """
     Extract patches from a given image
@@ -29,7 +33,7 @@ def img_crop(im, w, h):
             list_patches.append(im_patch)
     return list_patches
 
-def extract_data(filename, num_images):
+def extract_data(filename, num_images, IMG_PATCH_SIZE):
     """
     Extract the images into a 4D tensor [image index, y, x, channels].
     Values are rescaled from [0, 255] down to [-0.5, 0.5].
@@ -39,6 +43,7 @@ def extract_data(filename, num_images):
     
     :param filename: the name of the images (string)
     :param num_images: the number of images
+    :param IMG_PATCH_SIZE: the size of the patches
     :return: the patches for all images
     """
     imgs = []
@@ -60,7 +65,7 @@ def extract_data(filename, num_images):
     img_patches = [img_crop(imgs[i], IMG_PATCH_SIZE, IMG_PATCH_SIZE) for i in range(num_images)]
     data = [img_patches[i][j] for i in range(len(img_patches)) for j in range(len(img_patches[i]))]
 
-    return numpy.asarray(data)
+    return np.asarray(data)
 
 def value_to_class(v):
     """
@@ -73,13 +78,13 @@ def value_to_class(v):
     :return: the label corresponding to v
     """
     foreground_threshold = 0.25  # percentage of pixels > 1 required to assign a foreground label to a patch
-    df = numpy.sum(v)
+    df = np.sum(v)
     if df > foreground_threshold:  # road
         return [0, 1]
     else:  # bgrd
         return [1, 0]
 
-def extract_labels(filename, num_images):
+def extract_labels(filename, num_images, IMG_PATCH_SIZE):
     """
     Extract the labels into a 1-hot matrix [image index, label index].
     
@@ -88,6 +93,7 @@ def extract_labels(filename, num_images):
     
     :param filename: the name of the images (string)
     :param num_images: the number of images
+    :param IMG_PATCH_SIZE: the size of the patches
     :return: an array containing the label of all images
     """
     gt_imgs = []
@@ -104,11 +110,11 @@ def extract_labels(filename, num_images):
     num_images = len(gt_imgs)
     gt_patches = [img_crop(gt_imgs[i], IMG_PATCH_SIZE, IMG_PATCH_SIZE) for i in range(num_images)]
 
-    data = numpy.asarray([gt_patches[i][j] for i in range(len(gt_patches)) for j in range(len(gt_patches[i]))])
-    labels = numpy.asarray([value_to_class(numpy.mean(data[i])) for i in range(len(data))])
+    data = np.asarray([gt_patches[i][j] for i in range(len(gt_patches)) for j in range(len(gt_patches[i]))])
+    labels = np.asarray([value_to_class(np.mean(data[i])) for i in range(len(data))])
 
     # Convert to dense 1-hot representation.
-    return labels.astype(numpy.float32)
+    return labels.astype(np.float32)
 
 def label_to_img(imgwidth, imgheight, w, h, labels):
     """
@@ -124,7 +130,7 @@ def label_to_img(imgwidth, imgheight, w, h, labels):
     :param labels: the labels we want to convert into a image
     :return: the corresponding image
     """
-    array_labels = numpy.zeros([imgwidth, imgheight])
+    array_labels = np.zeros([imgwidth, imgheight])
     idx = 0
     for i in range(0, imgheight, h):
         for j in range(0, imgwidth, w):

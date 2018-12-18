@@ -31,17 +31,14 @@ from post_processing_helper import add_road_when_line_of_roads
 from post_processing_helper import suppress_group_roads_surrounded
 from data_loader_saver_helper import extract_data
 from data_loader_saver_helper import extract_labels
-from data_loader_saver_helper import label_to_image
+from data_loader_saver_helper import label_to_img
+from data_loader_saver_helper import img_crop
 
 import tensorflow.python.platform
 
-import numpy
 import numpy as np
 import tensorflow as tf
 
-NUM_CHANNELS = 3  # RGB images
-PIXEL_DEPTH = 255
-NUM_LABELS = 2
 TRAINING_SIZE = 100
 
 # Set image patch size in pixels
@@ -170,7 +167,7 @@ if __name__ == '__main__':
         IMG_HEIGHT = img.shape[1]
         N_PATCHES_PER_IMAGE = (IMG_WIDTH/IMG_PATCH_SIZE)*(IMG_HEIGHT/IMG_PATCH_SIZE)
         img_patches = img_crop(img, IMG_PATCH_SIZE, IMG_PATCH_SIZE)
-        data_to_test = numpy.asarray(img_patches)
+        data_to_test = np.asarray(img_patches)
         predicted_image = road_model.predict(data_to_test)
         size_width = int(IMG_WIDTH/IMG_PATCH_SIZE)
         size_height = int(IMG_HEIGHT/IMG_PATCH_SIZE)
