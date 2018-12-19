@@ -8,6 +8,8 @@ import os
 import matplotlib.image as mpimg
 import numpy as np
 
+THRESHOLD = 0.5
+
 def img_crop(im, w, h):
     """
     Extract patches from a given image
@@ -139,7 +141,7 @@ def label_to_img(imgwidth, imgheight, w, h, labels):
     idx = 0
     for i in range(0, imgheight, h):
         for j in range(0, imgwidth, w):
-            if labels[idx][0] > 0.5:  # bgrd
+            if labels[idx][0] > THRESHOLD:  # bgrd
                 l = 0
             else:
                 l = 1
