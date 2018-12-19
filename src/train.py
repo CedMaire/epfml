@@ -1,7 +1,7 @@
 """
-This file will train will reproduce the model we used to reach our best result.
-In order to run it, you need to get the additional data (1500 images)
-The training can take several hours
+This file will train and reproduce the model we used to reach our best result.
+In order to run it, you need to get the additional data (1500 images).
+The training can take several hours.
 
 Benjamin Délèze, Cedric Maire, Antonio Morais
 """
@@ -42,7 +42,6 @@ should_load_model = False
 IMG_PATCH_SIZE = 16
 
 if __name__ == '__main__':   
-
     if not should_load_model:
         data_dir = 'data/training/'
         train_data_filename = data_dir + 'images/'

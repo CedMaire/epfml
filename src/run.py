@@ -29,11 +29,10 @@ import numpy as np
 IMG_PATCH_SIZE = 16
 
 if __name__ == '__main__':
-
     #Load the model
     road_model = load_model('road_model_20E15002.h5py')
     road_model.summary()  
-    
+
     TEST_IMAGE_DIR = "data/test_set_images/images/"
     submission_filename = 'data/test_submission.csv'
     image_filenames = []

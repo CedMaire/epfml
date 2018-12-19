@@ -1,5 +1,5 @@
 """
-This file contains several functions to transform and modify images
+This file contains several functions to transform and modify images after prediction.
 
 Benjamin Délèze, Cedric Maire, Antonio Morais
 """
@@ -7,13 +7,14 @@ import numpy as np
 
 def suppress_single_roads(labels, size_width, size_height):
     """
-    Given an image, turn the single road patches circled by background into background
-    
+    Given an image, turns single road patches circled by background into background patches.
+
     :param labels: the labels of the image
     :param size_width: the width of the image
     :param size_height: the height of the image
     :return new_labels: the new labels for the image
     """
+
     new_labels = np.copy(labels)
     for i in range(1, size_width - 1):
         for j in range(1, size_height - 1):
@@ -24,26 +25,27 @@ def suppress_single_roads(labels, size_width, size_height):
 
 def get_index(i, j, size_width):
     """
-    Given the position i and j of a patch return its corresponding index in an array of size size_width
-    
+    Given the position i and j of a patch return its corresponding index in an array of size size_width.
+
     :param i: index i of the image
     :param j: index j of the image
     :param size_width: width of the image
     :return: the corresponding index in the array
     """
-    
+
     return j * size_width + i
 
 def add_road_when_line_of_roads(labels, size_width, size_height, number_of_road_needed):
     """
-    Turn background's patches into road's ones when the are in the middle of a line of road patches
-    
+    Turn background's patches into road's ones when they are in the middle of a line of road patches.
+
     :param labels: the labels of the image
     :param size_width: the width of the image
     :param size_height: the height of the image
-    :param number_of_road_needed: number of road's patches that we need to have on each side of a patch such that we convert it
+    :param number_of_road_needed: number of roads patches that we need to have on each side of a patch such that we convert it
     :return new_labels: the new labels of the image
     """
+
     new_labels = np.copy(labels)
     first = False
     #horizontal lines
@@ -78,14 +80,15 @@ def add_road_when_line_of_roads(labels, size_width, size_height, number_of_road_
 
 def suppress_group_roads_surrounded(labels, size_width, size_height, size_square):
     """
-    Look at each square of size_square. If the square contains some road's patches and the square is surrounded only by background patches, transfoms the road's patches into background's ones. 
-    
+    Look at each square of size_square. If the square contains some road patches and the square is surrounded only by background patches, transfoms the road patches into background ones.
+
     :param labels: labels of the image
     :param size_width: width of the image
     :param size_height: height of the image
     :param size_square: size of the inner square considered
     :return new_labeles: the new labels of the image
     """
+
     new_labels = np.copy(labels)
     for i in range(1, size_width - size_square):
         for j in range(1, size_height - size_square):

@@ -1,5 +1,5 @@
 """
-This file contains several functions to load/save and extract data/label from images
+This file contains several functions to load/save and extract data/label from images.
 
 Benjamin Délèze, Cedric Maire, Antonio Morais
 """
@@ -11,15 +11,16 @@ import numpy as np
 def img_crop(im, w, h):
     """
     Extract patches from a given image
-    
-    Function from the tf_aerial_images.py given on CrowAI
+
+    Function from the tf_aerial_images.py given on CrowAI.
     Credits: Aurelien Lucchi, ETH Zürich
-    
+
     :param im: the image
     :param w: the width of a patch
     :param h: the height of a patch
     :return list_patches: the list of patches for the image
-    """  
+    """
+
     list_patches = []
     imgwidth = im.shape[0]
     imgheight = im.shape[1]
@@ -37,15 +38,16 @@ def extract_data(filename, num_images, IMG_PATCH_SIZE):
     """
     Extract the images into a 4D tensor [image index, y, x, channels].
     Values are rescaled from [0, 255] down to [-0.5, 0.5].
-    
-    Function from the tf_aerial_images.py given on CrowAI
+
+    Function from the tf_aerial_images.py given on CrowAI.
     Credits: Aurelien Lucchi, ETH Zürich
-    
+
     :param filename: the name of the images (string)
     :param num_images: the number of images
     :param IMG_PATCH_SIZE: the size of the patches
     :return: the patches for all images
     """
+
     imgs = []
     for i in range(1, num_images+1):
         imageid = "satImage_%.4d" % i
@@ -69,14 +71,15 @@ def extract_data(filename, num_images, IMG_PATCH_SIZE):
 
 def value_to_class(v):
     """
-    Assign a label to a patch v
-    
-    Function from the tf_aerial_images.py given on CrowAI
+    Assign a label to a patch v.
+
+    Function from the tf_aerial_images.py given on CrowAI.
     Credits: Aurelien Lucchi, ETH Zürich
-    
+
     :param v: a patch
     :return: the label corresponding to v
     """
+
     foreground_threshold = 0.25  # percentage of pixels > 1 required to assign a foreground label to a patch
     df = np.sum(v)
     if df > foreground_threshold:  # road
@@ -87,15 +90,16 @@ def value_to_class(v):
 def extract_labels(filename, num_images, IMG_PATCH_SIZE):
     """
     Extract the labels into a 1-hot matrix [image index, label index].
-    
-    Function from the tf_aerial_images.py given on CrowAI
+
+    Function from the tf_aerial_images.py given on CrowAI.
     Credits: Aurelien Lucchi, ETH Zürich
-    
+
     :param filename: the name of the images (string)
     :param num_images: the number of images
     :param IMG_PATCH_SIZE: the size of the patches
     :return: an array containing the label of all images
     """
+
     gt_imgs = []
     for i in range(1, num_images + 1):
         imageid = "satImage_%.4d" % i
@@ -119,10 +123,10 @@ def extract_labels(filename, num_images, IMG_PATCH_SIZE):
 def label_to_img(imgwidth, imgheight, w, h, labels):
     """
     Convert array of labels to an image
-    
-    Function from the tf_aerial_images.py given on CrowAI
+
+    Function from the tf_aerial_images.py given on CrowAI.
     Credits: Aurelien Lucchi, ETH Zürich
-    
+
     :param imgwidth: the width of the image we want
     :param imgheight: the height of the image we want
     :param w: the width of a patch
@@ -130,6 +134,7 @@ def label_to_img(imgwidth, imgheight, w, h, labels):
     :param labels: the labels we want to convert into a image
     :return: the corresponding image
     """
+
     array_labels = np.zeros([imgwidth, imgheight])
     idx = 0
     for i in range(0, imgheight, h):
