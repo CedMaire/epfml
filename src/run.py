@@ -54,7 +54,6 @@ if __name__ == '__main__':
         for size_square in range(2,4):
             predicted_image = suppress_group_roads_surrounded(predicted_image, size_width, size_height, size_square)
         predicted_image = label_to_img(IMG_WIDTH, IMG_HEIGHT, IMG_PATCH_SIZE, IMG_PATCH_SIZE, predicted_image)
-        
         #Save image
         image_filename = 'data/test_set_images/groundtruth/satImage_' + '%.3d' % i + '.png'
         imag = Image.fromarray(np.uint8(cm.gist_earth(predicted_image)*255))

@@ -31,8 +31,8 @@ import numpy as np
 import tensorflow as tf
 
 TRAINING_SIZE = 1500
-batch_size = 128
-epochs = 20
+batch_size = 64
+epochs = 150
 num_classes = 2
 should_load_model = False
 
@@ -69,7 +69,7 @@ if __name__ == '__main__':
         #fit the data
         road_train_dropout = road_model.fit(train_X, train_label, batch_size=batch_size,epochs=epochs,verbose=1,validation_data=(validation_X, validation_label))
 
-        road_model.save("road_model_20E1500Sigmoid.h5py")
+        road_model.save("road_model_sigmoid150.h5py")
         
         #Plot informations about the training
         accuracy = road_train_dropout.history['acc']

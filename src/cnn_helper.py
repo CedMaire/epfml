@@ -60,28 +60,23 @@ def create_model(num_classes):
     :param num_classes: the number of classes
     :return road_model: our model
     """
-    
     road_model = Sequential()
-    road_model.add(Conv2D(64, kernel_size=(5, 5),activation='linear',input_shape=(16,16,3),padding='same'))
+    road_model.add(Conv2D(32, kernel_size=(3, 3),activation='linear',input_shape=(16,16,3),padding='same'))
     road_model.add(LeakyReLU(alpha=0.1))
     road_model.add(MaxPooling2D((2, 2),padding='same'))
     road_model.add(Dropout(0.25))
-    road_model.add(Conv2D(128, (3, 3), activation='linear',padding='same'))
+    road_model.add(Conv2D(64, (3, 3), activation='linear',padding='same'))
     road_model.add(LeakyReLU(alpha=0.1))
     road_model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
     road_model.add(Dropout(0.25))
-    road_model.add(Conv2D(256, (3, 3), activation='linear',padding='same'))
+    road_model.add(Conv2D(128, (3, 3), activation='linear',padding='same'))
     road_model.add(LeakyReLU(alpha=0.1))                  
     road_model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
-    road_model.add(Dropout(0.25))
-    road_model.add(Conv2D(256, (3, 3), activation='linear',padding='same'))
-    road_model.add(LeakyReLU(alpha=0.1))                  
-    road_model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
-    road_model.add(Dropout(0.25))
+    road_model.add(Dropout(0.4))
     road_model.add(Flatten())
     road_model.add(Dense(128, activation='linear'))
     road_model.add(LeakyReLU(alpha=0.1))   
-    road_model.add(Dropout(0.5))
+    road_model.add(Dropout(0.3))
     road_model.add(Dense(num_classes, activation='sigmoid'))
 
     road_model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(),metrics=['accuracy'])

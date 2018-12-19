@@ -39,7 +39,7 @@ import tensorflow.python.platform
 import numpy as np
 import tensorflow as tf
 
-TRAINING_SIZE = 100
+TRAINING_SIZE = 10
 
 # Set image patch size in pixels
 # IMG_PATCH_SIZE should be a multiple of 4
@@ -54,8 +54,8 @@ if __name__ == '__main__':
 
     # Extract it into numpy arrays.
     #train_data = extract_data(train_data_filename, TRAINING_SIZE)
-    train_data = extract_data(train_data_filename, TRAINING_SIZE)
-    train_labels = extract_labels(train_labels_filename, TRAINING_SIZE)
+    train_data = extract_data(train_data_filename, TRAINING_SIZE, IMG_PATCH_SIZE)
+    train_labels = extract_labels(train_labels_filename, TRAINING_SIZE, IMG_PATCH_SIZE)
    
     c0 = 0  # bgrd
     c1 = 0  # road
@@ -96,10 +96,10 @@ if __name__ == '__main__':
     step_train_X, test_X, step_train_label, test_label = train_test_split(train_data, train_labels, test_size=0.1, random_state=13)
     train_X, validation_X, train_label, validation_label = train_test_split(step_train_X, step_train_label, test_size=0.1, random_state=13)
    
-    should_load_model = True
+    should_load_model = False
     if not should_load_model:
         batch_size = 125
-        epochs = 20
+        epochs = 10
         num_classes = 2
 
         road_model = Sequential()
@@ -131,7 +131,7 @@ if __name__ == '__main__':
 
         road_train_dropout = road_model.fit(train_X, train_label, batch_size=batch_size,epochs=epochs,verbose=1,validation_data=(validation_X, validation_label))
 
-        road_model.save("road_model_20E15003.h5py")
+        road_model.save("road_model_test2.h5py")
         
         accuracy = road_train_dropout.history['acc']
         val_accuracy = road_train_dropout.history['val_acc']
