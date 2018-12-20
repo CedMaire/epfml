@@ -26,6 +26,7 @@ from keras.layers.advanced_activations import LeakyReLU
 from sklearn.model_selection import train_test_split
 from keras.models import load_model
 from mask_to_submission import masks_to_submission
+from keras.callbacks import ReduceLROnPlateau, EarlyStopping
 
 
 import tensorflow.python.platform
@@ -37,11 +38,11 @@ import tensorflow as tf
 NUM_CHANNELS = 3  # RGB images
 PIXEL_DEPTH = 255
 NUM_LABELS = 2
-TRAINING_SIZE = 400
+TRAINING_SIZE = 1500
 VALIDATION_SIZE = 5  # Size of the validation set.
 SEED = 66478  # Set to None for random seed.
 BATCH_SIZE = 16  # 64
-NUM_EPOCHS = 100
+NUM_EPOCHS = 40
 RESTORE_MODEL = False  # If True, restore existing model instead of training a new one
 RECORDING_STEP = 0
 
@@ -78,7 +79,7 @@ def extract_data(filename, num_images):
     """
     imgs = []
     for i in range(1, num_images+1):
-        imageid = "satImage_%.3d" % i
+        imageid = "satImage_%.4d" % i
         image_filename = filename + imageid + ".png"
         if os.path.isfile(image_filename):
             print('Loading ' + image_filename)
@@ -113,7 +114,7 @@ def extract_labels(filename, num_images):
     """Extract the labels into a 1-hot matrix [image index, label index]."""
     gt_imgs = []
     for i in range(1, num_images + 1):
-        imageid = "satImage_%.3d" % i
+        imageid = "satImage_%.4d" % i
         image_filename = filename + imageid + ".png"
         if os.path.isfile(image_filename):
             print('Loading ' + image_filename)
@@ -544,9 +545,11 @@ if __name__ == '__main__':
     
     data_dir = 'data/training/'
     train_data_filename = data_dir + 'images/'
+    train_data_post_filename = 'data/training_post'
     train_labels_filename = data_dir + 'groundtruth/'
 
     # Extract it into numpy arrays.
+    #train_data = extract_data(train_data_filename, TRAINING_SIZE)
     train_data = extract_data(train_data_filename, TRAINING_SIZE)
     train_labels = extract_labels(train_labels_filename, TRAINING_SIZE)
     
@@ -560,7 +563,7 @@ if __name__ == '__main__':
         else:
             c1 = c1 + 1
     print('Number of data points per class: c0 = ' + str(c0) + ' c1 = ' + str(c1))
-
+            
     print('Balancing training data...')
     min_c = min(c0, c1)
     idx0 = [i for i, j in enumerate(train_labels) if j[0] == 1]
@@ -572,7 +575,7 @@ if __name__ == '__main__':
     train_labels = train_labels[new_indices]
 
     train_size = train_labels.shape[0]
-
+    
     c0 = 0
     c1 = 0
     for i in range(len(train_labels)):
@@ -585,94 +588,67 @@ if __name__ == '__main__':
     # This is where training samples and labels are fed to the graph.
     # These placeholder nodes will be fed a batch of training data at each
     # training step using the {feed_dict} argument to the Run() call below.
-        
+
     print(train_data.shape)
     print(train_labels.shape)
+    
     step_train_X, test_X, step_train_label, test_label = train_test_split(train_data, train_labels, test_size=0.1, random_state=13)
     train_X, validation_X, train_label, validation_label = train_test_split(step_train_X, step_train_label, test_size=0.1, random_state=13)
-    """
-    batch_size = 64 #16
-    epochs = 20
-    num_classes = 2
-    
-    road_model = Sequential()
-    road_model.add(Conv2D(32, kernel_size=(3, 3),activation='linear',input_shape=(16,16,3),padding='same'))
-    road_model.add(LeakyReLU(alpha=0.1))
-    road_model.add(MaxPooling2D((2, 2),padding='same'))
-    road_model.add(Conv2D(64, (3, 3), activation='linear',padding='same'))
-    road_model.add(LeakyReLU(alpha=0.1))
-    road_model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
-    road_model.add(Conv2D(128, (3, 3), activation='linear',padding='same'))
-    road_model.add(LeakyReLU(alpha=0.1))                  
-    road_model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
-    road_model.add(Flatten())
-    road_model.add(Dense(128, activation='linear'))
-    road_model.add(LeakyReLU(alpha=0.1))                  
-    road_model.add(Dense(num_classes, activation='softmax'))
-    
-    
-    road_model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(),metrics=['accuracy'])
-    
-    road_model.summary()
-    
-    road_train = road_model.fit(train_X, train_label, batch_size=batch_size,epochs=epochs,verbose=1,validation_data=(validation_X, validation_label))
-    
-    test_eval = road_model.evaluate(test_X, test_label, verbose=0)    
-    
-    print('Test loss:', test_eval[0])
-    print('Test accuracy:', test_eval[1])
 
-    accuracy = road_train.history['acc']
-    val_accuracy = road_train.history['val_acc']
-    loss = road_train.history['loss']
-    val_loss = road_train.history['val_loss']
-    epochs = range(len(accuracy))
-    plt.plot(epochs, accuracy, 'bo', label='Training accuracy')
-    plt.plot(epochs, val_accuracy, 'b', label='Validation accuracy')
-    plt.title('Training and validation accuracy')
-    plt.legend()
-    plt.figure()
-    plt.plot(epochs, loss, 'bo', label='Training loss')
-    plt.plot(epochs, val_loss, 'b', label='Validation loss')
-    plt.title('Training and validation loss')
-    plt.legend()
-    plt.show()
-
-    road_model.save("road_model.h5py")
-"""
     should_load_model = False
     if not should_load_model:
         batch_size = 64
-        epochs = 275
+        epochs = 200
         num_classes = 2
-
+        
+        def generate_minibatch():
+            while 1: 
+                X_batch = np.empty((batch_size, 16, 16, 3))
+                Y_batch = np.empty((batch_size, 2))
+                for i in range(batch_size):
+                    idx = np.random.choice(train_X.shape[0])
+                    X_batch[i] = train_X[idx]
+                    Y_batch[i] = train_label[idx]
+                yield (X_batch, Y_batch)
+            
         road_model = Sequential()
-        road_model.add(Conv2D(32, kernel_size=(3, 3),activation='linear',input_shape=(16,16,3),padding='same'))
+        road_model.add(Conv2D(32, kernel_size=(5, 5),activation='linear',input_shape=(16,16,3),padding='same'))
         road_model.add(LeakyReLU(alpha=0.1))
         road_model.add(MaxPooling2D((2, 2),padding='same'))
         road_model.add(Dropout(0.25))
-        road_model.add(Conv2D(64, (3, 3), activation='linear',padding='same'))
+        road_model.add(Conv2D(64, (4, 4), activation='linear',padding='same'))
         road_model.add(LeakyReLU(alpha=0.1))
         road_model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
         road_model.add(Dropout(0.25))
         road_model.add(Conv2D(128, (3, 3), activation='linear',padding='same'))
         road_model.add(LeakyReLU(alpha=0.1))                  
         road_model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
-        road_model.add(Dropout(0.4))
+        road_model.add(Dropout(0.25))
+        road_model.add(Conv2D(256, (3, 3), activation='linear',padding='same'))
+        road_model.add(LeakyReLU(alpha=0.1))                  
+        road_model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
+        road_model.add(Dropout(0.25))
         road_model.add(Flatten())
         road_model.add(Dense(128, activation='linear'))
         road_model.add(LeakyReLU(alpha=0.1))   
-        road_model.add(Dropout(0.3))
+        road_model.add(Dropout(0.5))
         road_model.add(Dense(num_classes, activation='softmax'))
 
         road_model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(),metrics=['accuracy'])
 
         road_model.summary()
 
-        road_train_dropout = road_model.fit(train_X, train_label, batch_size=batch_size,epochs=epochs,verbose=1,validation_data=(validation_X, validation_label))
-
-        road_model.save("road_model_dropout_from32to128batch64NewImageOneNight275epcohs.h5py")
+        #road_train_dropout = road_model.fit(train_X, train_label, batch_size=batch_size,epochs=epochs,verbose=1,validation_data=(validation_X, validation_label))
         
+         # This callback reduces the learning rate when the training accuracy does not improve any more
+        lr_callback = ReduceLROnPlateau(monitor='acc', factor=0.5, patience=5,                                        verbose=1, mode='auto', epsilon=0.0001, cooldown=0, min_lr=0)
+        
+        # Stops the training process upon convergence
+        stop_callback = EarlyStopping(monitor='acc', min_delta=0.0001, patience=11, verbose=1, mode='auto')
+        
+        road_train_dropout = road_model.fit_generator(generate_minibatch(), nb_epoch = epochs, samples_per_epoch=800, verbose=1, callbacks = [lr_callback, stop_callback]) 
+        road_model.save("road_model_window.h5py")
+        """
         accuracy = road_train_dropout.history['acc']
         val_accuracy = road_train_dropout.history['val_acc']
         loss = road_train_dropout.history['loss']
@@ -688,8 +664,9 @@ if __name__ == '__main__':
         plt.title('Training and validation loss')
         plt.legend()
         plt.show()
+        """
     else : 
-        road_model = load_model('road_model_dropout_new_test.h5py')
+        road_model = load_model('road_model_git120.h5py')
         road_model.summary()
 
     
@@ -703,6 +680,8 @@ if __name__ == '__main__':
     image_filenames = []
     for i in range(1, 51):
         img = mpimg.imread(TEST_IMAGE_DIR + "test_"+ '%.1d' % i + "/" + "test_"+ '%.1d' % i + ".png")
+        #img = mpimg.imread(train_data_filename + "satImage_"+ '%.3d' % i + ".png")
+        train_data_filename
         IMG_WIDTH = img.shape[0]
         IMG_HEIGHT = img.shape[1]
         N_PATCHES_PER_IMAGE = (IMG_WIDTH/IMG_PATCH_SIZE)*(IMG_HEIGHT/IMG_PATCH_SIZE)
