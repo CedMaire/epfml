@@ -10,6 +10,10 @@
 3) Run `train.py` from the `root` folder to train the model and predict the test data set
 4) Run `run.py` from the `root` folder to predict with the pre-trained model
 
+## How To Generate the Complete Dataset
+1) Run `image_multiplier.py` from the `root` folder
+2) The files are saved on disk in `data/training/`
+
 ## Files
 * `train.py` run this to train a new model, this can take several hours
 * `run.py` run this to create the CSV that produce our best result in CrowdAi
