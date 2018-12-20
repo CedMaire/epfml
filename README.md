@@ -10,6 +10,9 @@
 3) Run `train.py` from the `root` folder to train the model and predict the test data set
 4) Run `run.py` from the `root` folder to predict with the pre-trained model
 
+## CrowdId
+bdeleze 24966
+
 ## Authors
 Antonio Morais - antonio.morais@epfl.ch
 
