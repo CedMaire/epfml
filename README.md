@@ -5,7 +5,7 @@
 * `src/` contains all the source files
 
 ## How To
-1) Download the data set and pre-trained model from: ???????????
+1) Download the data set from: ???????????
 2) Extract the archive it should create the `data/` folder with following structure: `data/`, `data/???`, ...
 3) Run `train.py` from the `root` folder to train the model and predict the test data set
 4) Run `run.py` from the `root` folder to predict with the pre-trained model
