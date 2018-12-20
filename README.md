@@ -12,8 +12,24 @@
 5) Run `python src/run.py` to predict with the pre-trained model
 
 ## How To Generate the Complete Dataset
-1) Run `python src/image_multiplier.py` 
-2) The files are saved on disk in `data/training/`
+1) Download the 2 data sets from https://www.crowdai.org/challenges/epfl-ml-road-segmentation/dataset_files
+2) Extract them to a `data/` folder in the root directory
+3) Restructure the `test_set_images/` to obtain the same folder structure presented in the following tree
+```
+.
+├── test_set_images
+│   ├── groundtruth
+│   └── images
+│       ├── test_1
+│       ├── test_2
+│       ├── ...
+│       └── test_50
+└── training
+    ├── groundtruth
+    └── images
+```
+4) Run `python src/image_multiplier.py` 
+5) The files are saved on disk in `data/training/`
 
 ## Files
 * `train.py` run this to train a new model, this can take several hours
