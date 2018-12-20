@@ -7,7 +7,7 @@
 ## How To
 1) Download the data set from https://drive.google.com/open?id=1FJ05tqUF8VPPqDE923P1wujqpQp9Agws or generate it as explained in the next section
 2) Extract the archive to the `root` folder (same level as `src/`)  it should create the `data/` folder
-3) Install the following libraries (if not installed already) using `pip install`{`keras` , `matplotlib` , `numpy` , `opencv-python` , `tensorflow` , `sklearn` }
+3) Install the following libraries (if not installed already) using `pip install { keras , matplotlib , numpy , opencv-python , tensorflow , sklearn }`
   * `keras` 
   * `matplotlib` 
   * `numpy` 
@@ -15,11 +15,11 @@
   * `tensorflow` 
   * `sklearn` 
 
-4) Run `train.py` from the `root` folder to train the model and predict the test data set
-5) Run `run.py` from the `root` folder to predict with the pre-trained model
+4) Run `python src/train.py` to train the model and predict the test data set
+5) Run `python src/run.py` to predict with the pre-trained model
 
 ## How To Generate the Complete Dataset
-1) Run `image_multiplier.py` from the `root` folder
+1) Run `python src/image_multiplier.py` 
 2) The files are saved on disk in `data/training/`
 
 ## Files
